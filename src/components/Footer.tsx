@@ -114,8 +114,12 @@ export function Footer() {
                 </div>
                 <p className="text-green-300/80 text-xs">{t('discover_artisans')}</p>
               </div>
-              <div className="bg-white/10 p-2 rounded-xl border border-white/10">
-                <JuthoorQRCode size={72} fgColor="#ffffff" bgColor="transparent" />
+              <div className="rounded-xl overflow-hidden shadow-lg border border-white/20 transition-transform hover:scale-105 duration-300">
+                <img 
+                  src="/QR.png" 
+                  alt="Scan to explore" 
+                  className="w-[150px] h-[150px] object-contain bg-white" 
+                />
               </div>
             </div>
           </div>
