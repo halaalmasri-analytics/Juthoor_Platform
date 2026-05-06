@@ -1,0 +1,288 @@
+import { useEffect, useState } from 'react';
+import { useLanguage } from './contexts/LanguageContext';
+import { useAuth } from './contexts/AuthContext';
+import { useProducts } from './contexts/ProductContext';
+import { Header } from './components/Header';
+import { Hero } from './components/Hero';
+import { Footer } from './components/Footer';
+import { ArtisansPage } from './pages/ArtisansPage';
+import { ProductsPage } from './pages/Products';
+import { JuthoorProductCard } from './components/JuthoorProductCard';
+import { ProductDetail } from './pages/ProductDetail';
+import { Checkout } from './pages/Checkout';
+import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
+import { ArtisanDashboard } from './pages/ArtisanDashboard';
+import { BuyerDashboard } from './pages/BuyerDashboard';
+import { JuthoorInsights } from './pages/JuthoorInsights';
+import { Product } from './lib/staticData';
+import { Loader2, Leaf, Heart, Shield } from 'lucide-react';
+
+type HomePageProps = {
+  onProductClick: (id: string) => void;
+  onNavigate?: (view: string) => void;
+  currentView?: string;
+};
+
+function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
+  const [displayProducts, setDisplayProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { t, dir } = useLanguage();
+  const { products } = useProducts();
+
+  useEffect(() => {
+    loadProducts();
+  }, [products]);
+
+  async function loadProducts() {
+    // Simulate a short network delay for realistic UX
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    // Display all active mock products for this prototype
+    const activeProducts = products.filter((p) => p.product_status === 'active');
+    setDisplayProducts(activeProducts);
+    setLoading(false);
+  }
+
+  return (
+    <div className="min-h-screen bg-white" dir={dir}>
+      <Header onNavigate={onNavigate} currentView={currentView} />
+      <Hero onNavigate={onNavigate} />
+
+      <section className="py-20 bg-gradient-to-b from-white to-green-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className={`text-4xl font-bold text-green-900 mb-4 text-center`}>
+            {t('featured_products')}
+          </h2>
+          <p className="text-center text-gray-600 mb-12 text-lg">
+            {t('discover_crafts')}
+          </p>
+
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-12 h-12 animate-spin text-green-900" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {displayProducts.slice(0, 3).map((product) => (
+                <JuthoorProductCard 
+                  key={product.id} 
+                  product={product} 
+                  onClick={() => onProductClick(product.id)}
+                  onAuthRequired={() => onNavigate?.('login')}
+                />
+              ))}
+            </div>
+          )}
+
+          {!loading && products.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-xl text-gray-600">No products available yet. Check back soon!</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-20 bg-white" dir={dir}>
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-4xl font-bold text-center text-green-900 mb-16">
+            {t('why_juthoor')}
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="bg-green-100 p-4 rounded-full">
+                  <Leaf className="w-8 h-8 text-green-900" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-green-900 mb-3">
+                {t('authentic_crafts')}
+              </h3>
+              <p className="text-gray-600">
+                {t('authentic_crafts_desc')}
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="bg-amber-100 p-4 rounded-full">
+                  <Heart className="w-8 h-8 text-amber-600" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-green-900 mb-3">
+                {t('fair_trade')}
+              </h3>
+              <p className="text-gray-600">
+                {t('fair_trade_desc')}
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="bg-green-100 p-4 rounded-full">
+                  <Shield className="w-8 h-8 text-green-900" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-green-900 mb-3">
+                {t('heritage_verified')}
+              </h3>
+              <p className="text-gray-600">
+                {t('heritage_verified_desc')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'artisans' | 'products' | 'checkout' | 'login' | 'signup' | 'profile' | 'insights' | 'artisan-dashboard' | 'buyer-dashboard' | 'admin-dashboard'>('home');
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | null>(null);
+
+  const handleNavigate = (view: string) => {
+    setCurrentView(view as any);
+    setSelectedProductId(null);
+  };
+
+  const handleAuthRequiredAction = (targetView: string) => {
+    setRedirectAfterLogin(targetView);
+    setCurrentView('login');
+  };
+
+  const handleLoginSuccess = () => {
+    if (redirectAfterLogin) {
+      setCurrentView(redirectAfterLogin as any);
+      setRedirectAfterLogin(null);
+    } else {
+      const stored = localStorage.getItem('juthoor_user');
+      const currentUser = stored ? JSON.parse(stored) : null;
+      if (currentUser?.user_type === 'admin') setCurrentView('admin-dashboard');
+      else if (currentUser?.user_type === 'artisan') setCurrentView('artisan-dashboard');
+      else setCurrentView('buyer-dashboard');
+    }
+  };
+
+  return (
+    <ViewContent 
+      currentView={currentView} 
+      selectedProductId={selectedProductId}
+      onNavigate={handleNavigate}
+      onSelectProduct={setSelectedProductId}
+      onAuthRequired={handleAuthRequiredAction}
+      onLoginSuccess={handleLoginSuccess}
+    />
+  );
+}
+
+function ViewContent({ 
+  currentView, 
+  selectedProductId, 
+  onNavigate, 
+  onSelectProduct,
+  onAuthRequired,
+  onLoginSuccess
+}: any) {
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { products, loading: productsLoading } = useProducts();
+  
+  const selectedProduct = selectedProductId 
+    ? products.find(p => p.id === selectedProductId) 
+    : null;
+
+  if (authLoading || productsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-green-50">
+        <Loader2 className="w-12 h-12 text-green-800 animate-spin" />
+      </div>
+    );
+  }
+
+  // Auth Guard for Checkout
+  if (currentView === 'checkout' && !isAuthenticated) {
+     return <Login onBack={() => onNavigate('products')} onNavigateToSignup={() => onNavigate('signup')} onSuccess={onLoginSuccess} />;
+  }
+
+  if (selectedProduct) {
+     return (
+       <>
+         <Header onNavigate={onNavigate} currentView={currentView} />
+         <ProductDetail 
+            product={selectedProduct} 
+            onBack={() => onSelectProduct(null)} 
+            onAuthRequired={() => onAuthRequired(currentView)}
+         />
+         <Footer />
+       </>
+    );
+  }
+
+  switch (currentView) {
+    case 'login':
+      return <Login onBack={() => onNavigate('home')} onNavigateToSignup={() => onNavigate('signup')} onSuccess={onLoginSuccess} />;
+    case 'signup':
+      return <Signup onBack={() => onNavigate('home')} onNavigateToLogin={() => onNavigate('login')} onSuccess={onLoginSuccess} />;
+    
+    case 'artisan-dashboard':
+      if (!isAuthenticated || !user || user.user_type !== 'artisan') {
+        setTimeout(() => onNavigate('login'), 0);
+        return null;
+      }
+      return <ArtisanDashboard onNavigate={onNavigate} />;
+
+    case 'buyer-dashboard':
+    case 'profile':
+      if (!isAuthenticated || !user || user.user_type !== 'buyer') {
+        setTimeout(() => onNavigate('login'), 0);
+        return null;
+      }
+      return <BuyerDashboard onProductClick={onSelectProduct} onNavigate={onNavigate} />;
+
+    case 'admin-dashboard':
+    case 'insights':
+      if (!isAuthenticated || !user || user.user_type !== 'admin') {
+        setTimeout(() => onNavigate('login'), 0);
+        return null;
+      }
+      return (
+        <>
+          <Header onNavigate={onNavigate} currentView="admin-dashboard" />
+          <JuthoorInsights />
+          <Footer />
+        </>
+      );
+
+    case 'artisans':
+      return (
+        <>
+          <Header onNavigate={onNavigate} currentView={currentView} />
+          <ArtisansPage onProductClick={onSelectProduct} onAuthRequired={() => onAuthRequired(currentView)} />
+          <Footer />
+        </>
+      );
+    case 'products':
+      return (
+        <>
+          <Header onNavigate={onNavigate} currentView={currentView} />
+          <ProductsPage onProductClick={onSelectProduct} onAuthRequired={() => onAuthRequired(currentView)} />
+          <Footer />
+        </>
+      );
+    case 'checkout':
+      return (
+        <>
+          <Header onNavigate={onNavigate} currentView={currentView} />
+          <Checkout onBack={() => onNavigate('products')} />
+          <Footer />
+        </>
+      );
+    default:
+      return <HomePage onProductClick={onSelectProduct} onNavigate={onNavigate} currentView={currentView} />;
+  }
+}
+
+export default App;
