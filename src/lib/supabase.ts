@@ -18,8 +18,14 @@ const mockAuth = {
     return { data: { session: session ? JSON.parse(session) : null }, error: null };
   },
   onAuthStateChange: (callback: any) => {
-    const session = localStorage.getItem('juthoor_mock_session');
-    callback('SIGNED_IN', session ? JSON.parse(session) : null);
+    const sessionStr = localStorage.getItem('juthoor_mock_session');
+    const session = sessionStr ? JSON.parse(sessionStr) : null;
+    
+    // Simulate initial call
+    setTimeout(() => {
+      callback('SIGNED_IN', session);
+    }, 0);
+
     return { data: { subscription: { unsubscribe: () => {} } } };
   },
   signInWithPassword: async ({ email, password }: any) => {
@@ -31,12 +37,12 @@ const mockAuth = {
       localStorage.setItem('juthoor_mock_session', JSON.stringify(session));
       return { data: session, error: null };
     }
-    return { data: { user: null }, error: { message: 'Invalid credentials' } };
+    return { data: { user: null }, error: { message: 'Invalid login credentials' } };
   },
   signUp: async ({ email, password, options }: any) => {
     const users = JSON.parse(localStorage.getItem('juthoor_mock_users') || '[]');
     if (users.find((u: any) => u.email === email)) {
-      return { data: { user: null }, error: { message: 'User already exists' } };
+      return { data: { user: null }, error: { message: 'User already registered' } };
     }
     
     const newUser = { 
@@ -60,7 +66,7 @@ const mockAuth = {
   },
   updateUser: async ({ data }: any) => {
     const sessionStr = localStorage.getItem('juthoor_mock_session');
-    if (!sessionStr) return { error: { message: 'No session' } };
+    if (!sessionStr) return { error: { message: 'No active session found' } };
     
     const session = JSON.parse(sessionStr);
     session.user.user_metadata = { ...session.user.user_metadata, ...data };
@@ -81,11 +87,16 @@ const mockAuth = {
 
 // Export the client (Real or Mock)
 export const supabase = isSupabaseConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      }
+    })
   : { auth: mockAuth } as any;
 
 if (!isSupabaseConfigured) {
-  console.info('Juthoor: Using Smart Mock Auth. Add VITE_SUPABASE_URL to use real Supabase.');
+  console.info('Juthoor: Using Smart Mock Auth. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to use real Supabase.');
 }
 
 export type { Artisan, Product, User };

@@ -19,9 +19,14 @@ export function Profile({ onProductClick }: { onProductClick: (id: string) => vo
 
   const handleUpdate = async () => {
     setLoading(true);
-    await updateUser({ full_name: name, email });
-    setLoading(false);
-    setIsEditing(false);
+    try {
+      await updateUser({ full_name: name, email });
+      setIsEditing(false);
+    } catch (err: any) {
+      console.error('Profile: Update error:', err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const mockOrders = [

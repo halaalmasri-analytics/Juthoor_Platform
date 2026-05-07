@@ -20,8 +20,8 @@ export function Signup({ onBack, onNavigateToLogin, onSuccess }: { onBack: () =>
     try {
       await signUp(email, password, { full_name: fullName, user_type: role });
       onSuccess();
-    } catch (err) {
-      setError(t('signup_error'));
+    } catch (err: any) {
+      setError(err.message || t('signup_error'));
     } finally {
       setLoading(false);
     }

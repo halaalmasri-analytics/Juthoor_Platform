@@ -18,8 +18,8 @@ export function Login({ onBack, onNavigateToSignup, onSuccess }: { onBack: () =>
     try {
       await signIn(email, password);
       onSuccess();
-    } catch (err) {
-      setError(t('invalid_credentials'));
+    } catch (err: any) {
+      setError(err.message || t('invalid_credentials'));
     } finally {
       setLoading(false);
     }

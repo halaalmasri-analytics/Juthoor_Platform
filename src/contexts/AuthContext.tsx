@@ -34,12 +34,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Get initial session
     const initAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
         if (session?.user) {
           setUser(mapSupabaseUser(session.user));
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
+        console.error('AuthContext: Error getting initial session:', error);
       } finally {
         setLoading(false);
       }
@@ -48,7 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('AuthContext: Auth event:', event);
       if (session?.user) {
         setUser(mapSupabaseUser(session.user));
       } else {
@@ -63,54 +66,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function signUp(email: string, password: string, userData: Partial<User>): Promise<void> {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: userData.full_name,
-          user_type: userData.user_type || 'buyer',
-          profile_photo_url: userData.profile_photo_url,
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: userData.full_name,
+            user_type: userData.user_type || 'buyer',
+            profile_photo_url: userData.profile_photo_url,
+          },
         },
-      },
-    });
+      });
 
-    if (error) throw error;
-    if (data.user) {
-      setUser(mapSupabaseUser(data.user));
+      if (error) throw error;
+      if (data.user) {
+        setUser(mapSupabaseUser(data.user));
+      }
+    } catch (err: any) {
+      console.error('AuthContext: Signup error:', err.message);
+      throw err;
     }
   }
 
   async function signIn(email: string, password: string): Promise<void> {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) throw error;
-    if (data.user) {
-      setUser(mapSupabaseUser(data.user));
+      if (error) throw error;
+      if (data.user) {
+        setUser(mapSupabaseUser(data.user));
+      }
+    } catch (err: any) {
+      console.error('AuthContext: Signin error:', err.message);
+      throw err;
     }
   }
 
   async function signOut(): Promise<void> {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    setUser(null);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+    } catch (err: any) {
+      console.error('AuthContext: Signout error:', err.message);
+      throw err;
+    }
   }
 
   async function updateUser(data: Partial<User>): Promise<void> {
-    const { data: updatedData, error } = await supabase.auth.updateUser({
-      data: {
-        full_name: data.full_name,
-        profile_photo_url: data.profile_photo_url,
-        user_type: data.user_type,
-      },
-    });
+    try {
+      const { data: updatedData, error } = await supabase.auth.updateUser({
+        data: {
+          full_name: data.full_name,
+          profile_photo_url: data.profile_photo_url,
+          user_type: data.user_type,
+        },
+      });
 
-    if (error) throw error;
-    if (updatedData.user) {
-      setUser(mapSupabaseUser(updatedData.user));
+      if (error) throw error;
+      if (updatedData.user) {
+        setUser(mapSupabaseUser(updatedData.user));
+      }
+    } catch (err: any) {
+      console.error('AuthContext: Update user error:', err.message);
+      throw err;
     }
   }
 
