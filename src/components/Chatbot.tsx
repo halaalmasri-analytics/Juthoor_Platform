@@ -132,7 +132,7 @@ They are interested in their performance and feedback. Do not share personal dat
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'llama3-70b-8192',
+          model: 'mixtral-8x7b-32768',
           messages: [
             { 
               role: 'user', 
