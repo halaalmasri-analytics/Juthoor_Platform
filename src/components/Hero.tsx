@@ -16,6 +16,7 @@ export function Hero({ onNavigate }: HeroProps) {
         loop
         muted
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
         <source src="/Palestine_Juthoor.mp4" type="video/mp4" />
