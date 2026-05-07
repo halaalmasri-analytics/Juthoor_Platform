@@ -88,29 +88,43 @@ They are interested in their performance and feedback. Do not share personal dat
   const generateAiResponse = async (userQuery: string) => {
     console.log('Chatbot: Generating response for query:', userQuery);
     
+    // FALLBACK LOGIC: If API fails or key is missing
+    const getFallbackResponse = (query: string) => {
+      const q = query.toLowerCase();
+      const isAr = language === 'ar';
+
+      // 1. Check for product mentions
+      const matchedProduct = PRODUCTS.find(p => 
+        q.includes(p.name_en.toLowerCase()) || (p.name_ar && q.includes(p.name_ar))
+      );
+      if (matchedProduct) {
+        return isAr 
+          ? `نعم، لدينا ${matchedProduct.name_ar}. سعره ${matchedProduct.price_usd}$ وهو من فئة ${matchedProduct.category}. هل تود معرفة المزيد؟`
+          : `Yes, we have the ${matchedProduct.name_en}. It costs $${matchedProduct.price_usd} and belongs to the ${matchedProduct.category} category. Would you like to know more?`;
+      }
+
+      // 2. Check for general questions
+      if (q.includes('price') || q.includes('cost') || q.includes('سعر')) {
+        return isAr ? "تتراوح أسعارنا بين 12$ و 220$. هل تبحث عن فئة معينة؟" : "Our prices range from $12 to $220. Are you looking for a specific category?";
+      }
+      if (q.includes('artisan') || q.includes('حرفي')) {
+        return isAr ? "نحن نعمل مع أكثر من 150 حرفياً فلسطينياً مبدعاً. يمكنك رؤيتهم في صفحة الحرفيين." : "We work with over 150 talented Palestinian artisans. You can see them on the Artisans page.";
+      }
+      if (q.includes('location') || q.includes('shipping') || q.includes('شحن')) {
+        return isAr ? "نشحن من فلسطين إلى جميع أنحاء العالم! يستغرق الشحن عادة من 7 إلى 14 يوماً." : "We ship from Palestine to the whole world! Shipping usually takes 7-14 days.";
+      }
+
+      return isAr 
+        ? "أنا هنا للمساعدة! يمكنك سؤالي عن المنتجات، الأسعار، أو قصص الحرفيين الفلسطينيين."
+        : "I'm here to help! You can ask me about products, prices, or the stories of our Palestinian artisans.";
+    };
+
     if (!GROQ_API_KEY) {
-      console.error('Chatbot: VITE_GROQ_API_KEY is missing in environment variables.');
-      return language === 'ar' 
-        ? "عذراً، لم يتم تكوين مفتاح API الخاص بـ Groq بعد."
-        : "Sorry, the Groq API key is not configured yet.";
+      console.warn('Chatbot: VITE_GROQ_API_KEY is missing. Using local fallback.');
+      return getFallbackResponse(userQuery);
     }
 
-    console.log('Chatbot: API Key found (length:', GROQ_API_KEY.length, ')');
-
-    const role = user?.user_type || 'buyer';
-    const systemPrompt = getSystemPrompt(role);
-
-    const apiMessages = [
-      { role: 'system', content: systemPrompt },
-      ...messages.slice(-10).map(m => ({
-        role: m.role,
-        content: m.content
-      })),
-      { role: 'user', content: userQuery }
-    ];
-
     try {
-      console.log('Chatbot: Sending request to Groq API...');
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -122,7 +136,7 @@ They are interested in their performance and feedback. Do not share personal dat
           messages: [
             { 
               role: 'user', 
-              content: `${systemPrompt}\n\nUser Question: ${userQuery}` 
+              content: `${getSystemPrompt(user?.user_type || 'buyer')}\n\nUser Question: ${userQuery}` 
             }
           ],
           max_tokens: 1024,
@@ -130,26 +144,16 @@ They are interested in their performance and feedback. Do not share personal dat
         })
       });
 
-      console.log('Chatbot: Received response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Chatbot: API Error Response:', errorData);
-        throw new Error(`API returned status ${response.status}: ${JSON.stringify(errorData)}`);
-      }
+      if (!response.ok) throw new Error('API Error');
 
       const data = await response.json();
-      console.log('Chatbot: API Success Data:', data);
-
       if (data.choices && data.choices[0]) {
         return data.choices[0].message.content;
       }
-      throw new Error('Invalid API response structure');
+      throw new Error('Invalid Response');
     } catch (error) {
-      console.error('Chatbot: Final Error:', error);
-      return language === 'ar'
-        ? "عذراً، واجهت مشكلة في الاتصال بخادم الذكاء الاصطناعي. يرجى المحاولة مرة أخرى."
-        : "Sorry, I encountered an issue connecting to the AI server. Please try again.";
+      console.error('Chatbot: API failed, falling back to local logic:', error);
+      return getFallbackResponse(userQuery);
     }
   };
 
