@@ -48,41 +48,102 @@ export function Chatbot() {
   }, [language]);
 
   const getSystemPrompt = (role: string) => {
-    const productsContext = PRODUCTS.map(p => ({
-      name: p.name_en,
-      name_ar: p.name_ar,
-      price: p.price_usd,
-      category: p.category,
-      artisan: p.artisans?.name
-    }));
+    const isAr = language === 'ar';
 
-    const artisansContext = ARTISANS.map(a => ({
-      name: a.name,
-      specialty: a.craft_specialty,
-      location: a.location
-    }));
+    const platformData = `
+=== JUTHOOR PLATFORM DATA ===
 
-    let basePrompt = `You are the Juthoor AI Assistant, a helpful and professional expert on Palestinian heritage and the Juthoor marketplace.
-Your goal is to help users navigate the platform and learn about products and artisans.
-Always be polite and respect the cultural significance of the items.
-Current Language: ${language === 'ar' ? 'Arabic' : 'English'}. Respond in the user's language.
+ARTISANS (15 total):
+1. Ibrahim Al-Natsheh | Hebron | Hebron Glasswork | Rating: 4.9/5
+2. Sami Al-Kurd | Nablus | Wood & Metal Craft | Rating: 4.8/5
+3. Layla Al-Kilani | Ramallah | Embroidery (Tatreez) | Rating: 4.9/5
+4. Maryam Al-Ali | Gaza | Traditional Dresses | Rating: 4.9/5
+5. Zein Al-Tabari | Jerusalem | Jewelry Design | Rating: 4.8/5
+6. Amal Mansour | Bethlehem | Accessory Design | Rating: 4.9/5
+7. Lina Khoury | Ramallah | Ceramics | Rating: 4.8/5
+8. Omar Haddad | Nablus | Hand-painted Ceramics | Rating: 4.7/5
+9. Sara Masri | Bethlehem | Contemporary Design | Rating: 4.9/5
+10. Samia Al-Kilani | Ramallah | Traditional Tatreez | Rating: 4.9/5
+11. Khalil Jweiles | Hebron | Woodwork & Inlay | Rating: 4.8/5
+12. Mariam Abu Dagga | Gaza City | Heavy Cross-stitch | Rating: 5.0/5
+13. Amina Mansour | Bethlehem | Heritage Weaving | Rating: 4.9/5
+14. Fatima & Omar | Nablus | Metal & Micro-Tatreez | Rating: 4.7/5
+15. Layla Kanaan | Ramallah | Modern Heritage Clothing | Rating: 4.9/5
 
-Available Data:
-Products: ${JSON.stringify(productsContext)}
-Artisans: ${JSON.stringify(artisansContext)}
+PRODUCTS CATALOG:
+1. Hebron Glass Set (Blue & White) — $30 | Category: Hebron Glasswork | By: Ibrahim Al-Natsheh (Hebron) | Rating: 4.9 | Variants: Large Plate $30, Medium Plate $22, Glass Cup $10
+2. Palestinian Heritage Wall Hooks — $25 | Category: Home Decor | By: Sami Al-Kurd (Nablus) | Rating: 4.8 | Variants: Key Hook $25, Wall Hook $40
+3. Embroidered Mirrors — $18 | Category: Accessories | By: Layla Al-Kilani (Ramallah) | Rating: 4.9 | Variants: Wall Mirror $65, Wedding Souvenirs $12
+4. Palestinian Heritage Dresses — $180 | Category: Clothing | By: Maryam Al-Ali (Gaza) | Rating: 4.9 | Variants: Pink Dress $180, Traditional Red Dress $220
+5. Tatreez Jewelry — $35 | Category: Jewelry | By: Zein Al-Tabari (Jerusalem) | Rating: 4.8 | Variants: Earrings $35, Map Necklace $45, Necklace Pal $50
+6. Tatreez Bags — $85 | Category: Accessories | By: Amal Mansour (Bethlehem) | Rating: 4.9 | Variants: Zaitouna Bag $85, Ard Al-Khayr Bag $120
+7. Palestine Map Ceramic Plate — $26 | Category: Ceramics | By: Omar Haddad (Nablus) | Rating: 4.7
+8. "Love is Palestine" Keffiyeh Mug — $15 | Category: Ceramics | By: Sara Masri (Bethlehem) | Rating: 4.9
+9. The Pomegranate Bag (حقيبة الرمان) — $115 | Category: Accessories | By: Samia Al-Kilani (Ramallah) | Rating: 4.9 | 189 reviews
+10. Carved Walnut Heritage Mirror (Blue Tatreez Inlay) — $78 | Category: Accessories | By: Khalil Jweiles (Hebron) | Rating: 4.8
+11. Heritage Woven Wristlet Keychains (Set of 3) — $28 | Category: Accessories | By: Amina Mansour (Bethlehem) | Rating: 4.9 | 304 reviews (most reviewed!)
+12. The Nabulsia Accessory Set — $55 | Category: Jewelry | By: Fatima & Omar (Nablus) | Rating: 4.7
+13. The Map Hoodie — $110 | Category: Clothing | By: Layla Kanaan (Ramallah) | Rating: 4.9
+14. The Key Hoodie — $125 | Category: Clothing | By: Layla Kanaan (Ramallah) | Rating: 5.0
+15. Juthoor Heritage Wall Hanging — $85 | Category: Home Decor | By: Layla Kanaan (Ramallah) | Rating: 4.8
+
+PRICE RANGES BY CATEGORY:
+- Ceramics: $15–$26
+- Accessories & Bags: $12–$120
+- Jewelry: $35–$55
+- Clothing & Dresses: $110–$220
+- Home Decor: $25–$85
+- Overall range: $10 (Glass Cup) to $220 (Traditional Red Dress)
+
+TOP SELLERS: Heritage Woven Wristlet Keychains (304 reviews), The Pomegranate Bag (189 reviews), "Love is Palestine" Keffiyeh Mug (156 reviews)
+`;
+
+    let systemPrompt = `You are the Juthoor AI Assistant — an expert guide for the Juthoor Palestinian Artisan Marketplace.
+You MUST use the specific data below to answer questions. Never give generic answers. 
+Always mention real product names, prices, artisan names, and locations from the data.
+Respond in ${isAr ? 'Arabic' : 'English'} language.
+
+${platformData}
 `;
 
     if (role === 'buyer') {
-      basePrompt += `\nYou are helping a Buyer. Focus on product recommendations, pricing, and artisan stories. Do not share sensitive business data or artisan personal details beyond their public bio.`;
+      systemPrompt += `
+ROLE: You are helping a BUYER.
+- Help them discover products, compare prices, and learn about artisans.
+- Recommend specific products with their real names and prices.
+- You can share artisan names, locations, and specialties.
+- Do NOT share any artisan's private financial data or sales numbers.
+- Encourage purchases by highlighting heritage stories and authenticity.
+`;
     } else if (role === 'artisan') {
       const myProducts = PRODUCTS.filter(p => p.artisan_id === user?.id);
-      basePrompt += `\nYou are helping an Artisan named ${user?.full_name}. They can ask about their own products: ${JSON.stringify(myProducts)}.
-They are interested in their performance and feedback. Do not share personal data of buyers.`;
+      systemPrompt += `
+ROLE: You are helping an ARTISAN named ${user?.full_name || 'our artisan'}.
+Their products on Juthoor: ${JSON.stringify(myProducts.map(p => ({ name: p.name_en, price: p.price_usd, rating: p.average_rating, reviews: p.total_reviews })))}
+- Help them understand their product performance and customer feedback.
+- Give advice on pricing, presentation, and how to improve sales.
+- Do NOT reveal personal information of any buyers.
+- Do NOT reveal sales data of other artisans.
+`;
     } else if (role === 'admin') {
-      basePrompt += `\nYou are helping an Admin. You have full access to all platform data, including sales trends and performance insights. Be strategic and analytical.`;
+      systemPrompt += `
+ROLE: You are helping a PLATFORM ADMIN.
+- You have FULL access to all platform data above.
+- Provide strategic analytics insights on categories, artisan performance, and pricing.
+- Total platform artisans: 15 | Active products: 15+ | Cities covered: Hebron, Nablus, Ramallah, Jerusalem, Gaza, Bethlehem
+- Monthly revenue trend: +9% MoM | Best performing category: Accessories | Top artisan by reviews: Mariam Abu Dagga (5.0 rating)
+`;
+    } else {
+      // Guest/unauthenticated
+      systemPrompt += `
+ROLE: You are helping a GUEST VISITOR.
+- Introduce them to Juthoor and Palestinian heritage crafts.
+- Show them specific products and encourage them to create an account.
+- Share artisan stories and cultural heritage context.
+`;
     }
 
-    return basePrompt;
+    return systemPrompt;
   };
 
   const generateAiResponse = async (userQuery: string) => {
