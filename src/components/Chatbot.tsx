@@ -51,95 +51,132 @@ export function Chatbot() {
     const isAr = language === 'ar';
 
     const platformData = `
-=== JUTHOOR PLATFORM DATA ===
+=== JUTHOOR PLATFORM — COMPLETE REFERENCE DATA ===
 
-ARTISANS (15 total):
-1. Ibrahim Al-Natsheh | Hebron | Hebron Glasswork | Rating: 4.9/5
-2. Sami Al-Kurd | Nablus | Wood & Metal Craft | Rating: 4.8/5
-3. Layla Al-Kilani | Ramallah | Embroidery (Tatreez) | Rating: 4.9/5
-4. Maryam Al-Ali | Gaza | Traditional Dresses | Rating: 4.9/5
-5. Zein Al-Tabari | Jerusalem | Jewelry Design | Rating: 4.8/5
-6. Amal Mansour | Bethlehem | Accessory Design | Rating: 4.9/5
-7. Lina Khoury | Ramallah | Ceramics | Rating: 4.8/5
-8. Omar Haddad | Nablus | Hand-painted Ceramics | Rating: 4.7/5
-9. Sara Masri | Bethlehem | Contemporary Design | Rating: 4.9/5
-10. Samia Al-Kilani | Ramallah | Traditional Tatreez | Rating: 4.9/5
-11. Khalil Jweiles | Hebron | Woodwork & Inlay | Rating: 4.8/5
-12. Mariam Abu Dagga | Gaza City | Heavy Cross-stitch | Rating: 5.0/5
-13. Amina Mansour | Bethlehem | Heritage Weaving | Rating: 4.9/5
-14. Fatima & Omar | Nablus | Metal & Micro-Tatreez | Rating: 4.7/5
-15. Layla Kanaan | Ramallah | Modern Heritage Clothing | Rating: 4.9/5
+📍 ARTISANS BY CITY & SPECIALTY:
 
-PRODUCTS CATALOG:
-1. Hebron Glass Set (Blue & White) — $30 | Category: Hebron Glasswork | By: Ibrahim Al-Natsheh (Hebron) | Rating: 4.9 | Variants: Large Plate $30, Medium Plate $22, Glass Cup $10
-2. Palestinian Heritage Wall Hooks — $25 | Category: Home Decor | By: Sami Al-Kurd (Nablus) | Rating: 4.8 | Variants: Key Hook $25, Wall Hook $40
-3. Embroidered Mirrors — $18 | Category: Accessories | By: Layla Al-Kilani (Ramallah) | Rating: 4.9 | Variants: Wall Mirror $65, Wedding Souvenirs $12
-4. Palestinian Heritage Dresses — $180 | Category: Clothing | By: Maryam Al-Ali (Gaza) | Rating: 4.9 | Variants: Pink Dress $180, Traditional Red Dress $220
-5. Tatreez Jewelry — $35 | Category: Jewelry | By: Zein Al-Tabari (Jerusalem) | Rating: 4.8 | Variants: Earrings $35, Map Necklace $45, Necklace Pal $50
-6. Tatreez Bags — $85 | Category: Accessories | By: Amal Mansour (Bethlehem) | Rating: 4.9 | Variants: Zaitouna Bag $85, Ard Al-Khayr Bag $120
-7. Palestine Map Ceramic Plate — $26 | Category: Ceramics | By: Omar Haddad (Nablus) | Rating: 4.7
-8. "Love is Palestine" Keffiyeh Mug — $15 | Category: Ceramics | By: Sara Masri (Bethlehem) | Rating: 4.9
-9. The Pomegranate Bag (حقيبة الرمان) — $115 | Category: Accessories | By: Samia Al-Kilani (Ramallah) | Rating: 4.9 | 189 reviews
-10. Carved Walnut Heritage Mirror (Blue Tatreez Inlay) — $78 | Category: Accessories | By: Khalil Jweiles (Hebron) | Rating: 4.8
-11. Heritage Woven Wristlet Keychains (Set of 3) — $28 | Category: Accessories | By: Amina Mansour (Bethlehem) | Rating: 4.9 | 304 reviews (most reviewed!)
-12. The Nabulsia Accessory Set — $55 | Category: Jewelry | By: Fatima & Omar (Nablus) | Rating: 4.7
-13. The Map Hoodie — $110 | Category: Clothing | By: Layla Kanaan (Ramallah) | Rating: 4.9
-14. The Key Hoodie — $125 | Category: Clothing | By: Layla Kanaan (Ramallah) | Rating: 5.0
-15. Juthoor Heritage Wall Hanging — $85 | Category: Home Decor | By: Layla Kanaan (Ramallah) | Rating: 4.8
+NABLUS (specializes in Tatreez Embroidery & Metal Craft):
+  • Sami Al-Kurd — Wood & Metal Craft | Rating 4.8 | Products: Heritage Wall Hooks ($25–$40)
+  • Omar Haddad — Hand-painted Ceramics | Rating 4.7 | Products: Palestine Map Ceramic Plate ($26)
+  • Fatima & Omar — Metal & Micro-Tatreez | Rating 4.7 | Products: The Nabulsia Accessory Set ($55)
 
-PRICE RANGES BY CATEGORY:
-- Ceramics: $15–$26
-- Accessories & Bags: $12–$120
-- Jewelry: $35–$55
-- Clothing & Dresses: $110–$220
-- Home Decor: $25–$85
-- Overall range: $10 (Glass Cup) to $220 (Traditional Red Dress)
+HEBRON (specializes in Glasswork & Woodwork):
+  • Ibrahim Al-Natsheh — Hebron Glasswork | Rating 4.9 | Products: Hebron Glass Set (Cup $10, Medium Plate $22, Large Plate $30)
+  • Khalil Jweiles — Woodwork & Inlay | Rating 4.8 | Products: Carved Walnut Heritage Mirror ($78)
 
-TOP SELLERS: Heritage Woven Wristlet Keychains (304 reviews), The Pomegranate Bag (189 reviews), "Love is Palestine" Keffiyeh Mug (156 reviews)
+RAMALLAH (specializes in Tatreez, Ceramics & Modern Heritage):
+  • Layla Al-Kilani — Embroidery/Tatreez | Rating 4.9 | Products: Embroidered Mirrors ($18, Wall Mirror $65)
+  • Lina Khoury — Ceramics | Rating 4.8 | (ceramic specialist)
+  • Samia Al-Kilani — Traditional Tatreez | Rating 4.9 | Products: The Pomegranate Bag ($115) — 189 reviews
+  • Layla Kanaan — Modern Heritage Clothing | Rating 4.9 | Products: Map Hoodie ($110), Key Hoodie ($125), Heritage Wall Hanging ($85)
+
+JERUSALEM (specializes in Jewelry & Traditional Textiles):
+  • Zein Al-Tabari — Jewelry Design | Rating 4.8 | Products: Tatreez Earrings ($35), Map Necklace ($45), Necklace Pal ($50)
+
+GAZA (specializes in Traditional Dresses & Cross-stitch):
+  • Maryam Al-Ali — Traditional Dresses | Rating 4.9 | Products: Pink Heritage Dress ($180), Traditional Red Dress ($220)
+  • Mariam Abu Dagga — Heavy Cross-stitch | Rating 5.0 ⭐ (highest rated artisan on platform)
+
+BETHLEHEM (specializes in Accessories & Heritage Weaving):
+  • Amal Mansour — Accessory Design | Rating 4.9 | Products: Tatreez Bags — Zaitouna Bag ($85), Ard Al-Khayr Bag ($120)
+  • Sara Masri — Contemporary Design | Rating 4.9 | Products: "Love is Palestine" Keffiyeh Mug ($15)
+  • Amina Mansour — Heritage Weaving | Rating 4.9 | Products: Heritage Woven Wristlet Keychains Set of 3 ($28) — 304 reviews, BEST SELLER
+
+---
+
+🛍️ PRODUCTS BY CATEGORY WITH SPECIFIC NAMES & PRICES:
+
+TATREEZ DRESSES & CLOTHING ($80–$220):
+  • Pink Heritage Dress — $180 | By Maryam Al-Ali, Gaza | Hand-embroidered tatreez
+  • Traditional Red Dress — $220 | By Maryam Al-Ali, Gaza | Premium heritage thobe
+  • The Map Hoodie — $110 | By Layla Kanaan, Ramallah | 3D embroidered Palestine map
+  • The Key Hoodie — $125 | By Layla Kanaan, Ramallah | "Key of Return" embroidery, rated 5.0/5
+
+OLIVE WOOD CRAFTS ($25–$85):
+  • Heritage Wall Hooks (Key Hook) — $25 | By Sami Al-Kurd, Nablus | Functional olive wood art
+  • Heritage Wall Hooks (Large) — $40 | By Sami Al-Kurd, Nablus
+  • Juthoor Heritage Wall Hanging — $85 | By Layla Kanaan, Ramallah | Natural linen & wooden rod
+
+CERAMICS & POTTERY ($10–$80):
+  • Hebron Glass Cup — $10 | By Ibrahim Al-Natsheh, Hebron | Authentic Hebron blue glass
+  • "Love is Palestine" Keffiyeh Mug — $15 | By Sara Masri, Bethlehem | Rating 4.9, 156 reviews
+  • Hebron Glass Medium Plate — $22 | By Ibrahim Al-Natsheh, Hebron
+  • Palestine Map Ceramic Plate — $26 | By Omar Haddad, Nablus | Map of Palestine with Arabic calligraphy
+  • Hebron Glass Large Display Plate — $30 | By Ibrahim Al-Natsheh, Hebron
+
+HANDWOVEN & TATREEZ BAGS ($40–$120):
+  • Tatreez Bags - Zaitouna Bag — $85 | By Amal Mansour, Bethlehem | Contemporary tatreez design
+  • The Pomegranate Bag — $115 | By Samia Al-Kilani, Ramallah | Al-Subul motifs, olive wood handles, 189 reviews
+  • Tatreez Bags - Ard Al-Khayr Bag — $120 | By Amal Mansour, Bethlehem | Premium heritage bag
+
+JEWELRY ($35–$55):
+  • Tatreez Earrings — $35 | By Zein Al-Tabari, Jerusalem
+  • Map Necklace — $45 | By Zein Al-Tabari, Jerusalem | Palestine map pendant
+  • The Nabulsia Accessory Set (Earrings + Bracelet) — $55 | By Fatima & Omar, Nablus | Micro-tatreez on metal
+
+ACCESSORIES & GIFTS ($12–$78):
+  • Wedding Souvenirs set — $12 | By Layla Al-Kilani, Ramallah
+  • Heritage Woven Wristlet Keychains (Set of 3) — $28 | By Amina Mansour, Bethlehem | BESTSELLER, 304 reviews
+  • Carved Walnut Heritage Mirror — $78 | By Khalil Jweiles, Hebron | Walnut wood + blue tatreez inlay
+
+---
+
+💰 PRICE RANGES SUMMARY:
+  • Budget-friendly (under $30): Glass cups, mugs, keychains, wedding souvenirs, ceramic plates
+  • Mid-range ($30–$80): Jewelry, glass sets, mirrors, wall hooks, accessories
+  • Premium ($80–$130): Tatreez bags, hoodies, wall hangings, heritage bags
+  • Luxury ($130–$220): Heritage thobes and traditional embroidered dresses
+
+🏆 TOP 3 BESTSELLERS:
+  1. Heritage Woven Wristlet Keychains — $28 (304 reviews)
+  2. The Pomegranate Bag — $115 (189 reviews)
+  3. "Love is Palestine" Keffiyeh Mug — $15 (156 reviews)
 `;
 
-    let systemPrompt = `You are the Juthoor AI Assistant — an expert guide for the Juthoor Palestinian Artisan Marketplace.
-You MUST use the specific data below to answer questions. Never give generic answers. 
-Always mention real product names, prices, artisan names, and locations from the data.
-Respond in ${isAr ? 'Arabic' : 'English'} language.
+    let systemPrompt = `You are the Juthoor AI Assistant — a knowledgeable and warm guide for the Juthoor Palestinian Artisan Marketplace.
+
+CRITICAL RULES:
+1. ALWAYS cite specific product names, exact prices, and artisan names from the data below.
+2. NEVER give vague or generic answers — every answer must reference real data.
+3. When asked about a category (dresses, bags, ceramics, etc.), list the specific products with their prices.
+4. Respond in ${isAr ? 'Arabic' : 'English'} language.
+5. Be warm, culturally respectful, and proud of Palestinian heritage.
 
 ${platformData}
 `;
 
     if (role === 'buyer') {
       systemPrompt += `
-ROLE: You are helping a BUYER.
-- Help them discover products, compare prices, and learn about artisans.
-- Recommend specific products with their real names and prices.
-- You can share artisan names, locations, and specialties.
-- Do NOT share any artisan's private financial data or sales numbers.
-- Encourage purchases by highlighting heritage stories and authenticity.
+ROLE: Helping a BUYER.
+- When they ask about products, give specific product names and prices from the data.
+- For category questions (e.g. "do you have bags?"), list ALL relevant products with prices.
+- Suggest budget options and premium options when relevant.
+- Do NOT share artisan business/sales data.
+- Highlight the cultural significance and heritage story of products when relevant.
 `;
     } else if (role === 'artisan') {
       const myProducts = PRODUCTS.filter(p => p.artisan_id === user?.id);
       systemPrompt += `
-ROLE: You are helping an ARTISAN named ${user?.full_name || 'our artisan'}.
-Their products on Juthoor: ${JSON.stringify(myProducts.map(p => ({ name: p.name_en, price: p.price_usd, rating: p.average_rating, reviews: p.total_reviews })))}
-- Help them understand their product performance and customer feedback.
-- Give advice on pricing, presentation, and how to improve sales.
-- Do NOT reveal personal information of any buyers.
-- Do NOT reveal sales data of other artisans.
+ROLE: Helping ARTISAN "${user?.full_name || 'our artisan'}".
+My products listed on Juthoor: ${JSON.stringify(myProducts.map(p => ({ name: p.name_en, price: p.price_usd, rating: p.average_rating, reviews: p.total_reviews })))}
+- Provide advice on product performance, pricing strategy, and presentation.
+- Compare their ratings to platform averages (4.85 avg).
+- Do NOT reveal buyer personal data or other artisans' private sales figures.
 `;
     } else if (role === 'admin') {
       systemPrompt += `
-ROLE: You are helping a PLATFORM ADMIN.
-- You have FULL access to all platform data above.
-- Provide strategic analytics insights on categories, artisan performance, and pricing.
-- Total platform artisans: 15 | Active products: 15+ | Cities covered: Hebron, Nablus, Ramallah, Jerusalem, Gaza, Bethlehem
-- Monthly revenue trend: +9% MoM | Best performing category: Accessories | Top artisan by reviews: Mariam Abu Dagga (5.0 rating)
+ROLE: Helping a PLATFORM ADMIN.
+- Full access to all platform data.
+- Platform stats: 15 artisans, 15+ products, 6 cities covered, +9% MoM revenue growth.
+- Best category: Accessories. Top-rated artisan: Mariam Abu Dagga (5.0). Most reviewed: Wristlet Keychains (304 reviews).
+- Provide strategic insights on category trends, artisan performance gaps, and growth opportunities.
 `;
     } else {
-      // Guest/unauthenticated
       systemPrompt += `
-ROLE: You are helping a GUEST VISITOR.
-- Introduce them to Juthoor and Palestinian heritage crafts.
-- Show them specific products and encourage them to create an account.
-- Share artisan stories and cultural heritage context.
+ROLE: Helping a GUEST VISITOR.
+- Introduce Juthoor as Palestine's premier artisan marketplace.
+- Share 2-3 specific products as examples with real names and prices.
+- Encourage them to create an account to purchase.
 `;
     }
 
