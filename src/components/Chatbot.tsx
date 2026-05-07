@@ -118,10 +118,15 @@ They are interested in their performance and feedback. Do not share personal dat
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'llama3-8b-8192',
-          messages: apiMessages,
-          temperature: 0.7,
+          model: 'llama3-70b-8192',
+          messages: [
+            { 
+              role: 'user', 
+              content: `${systemPrompt}\n\nUser Question: ${userQuery}` 
+            }
+          ],
           max_tokens: 1024,
+          temperature: 0.7,
         })
       });
 
