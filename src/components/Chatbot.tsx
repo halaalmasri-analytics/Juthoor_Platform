@@ -222,6 +222,42 @@ ROLE: Helping a GUEST VISITOR.
       return getFallbackResponse(userQuery);
     }
 
+    const role = user?.user_type || 'guest';
+    const isAr = language === 'ar';
+
+    // Build a self-contained context block embedded directly in the user message
+    const contextBlock = `
+CONTEXT — Juthoor Palestinian Artisan Marketplace:
+
+PRODUCTS & PRICES:
+- Tatreez Dresses: Pink Heritage Dress $180, Traditional Red Dress $220 (by Maryam Al-Ali, Gaza)
+- Clothing: Map Hoodie $110, Key Hoodie $125 (by Layla Kanaan, Ramallah)
+- Bags: Zaitouna Tatreez Bag $85, Pomegranate Bag $115, Ard Al-Khayr Bag $120
+- Ceramics & Glass: Hebron Glass Cup $10, Keffiyeh Mug $15, Medium Plate $22, Ceramic Map Plate $26, Large Plate $30
+- Accessories: Wedding Souvenirs $12, Keychains Set $28, Tatreez Earrings $35, Map Necklace $45, Nabulsia Set $55, Walnut Mirror $78, Wall Hanging $85
+- Jewelry: Tatreez Earrings $35, Map Necklace $45, Necklace Pal $50, Nabulsia Set $55
+- Home Decor: Heritage Wall Hooks $25-$40, Heritage Wall Hanging $85
+
+ARTISANS BY CITY:
+- Nablus: Sami Al-Kurd (wood/metal), Omar Haddad (ceramics), Fatima & Omar (micro-tatreez jewelry)
+- Hebron: Ibrahim Al-Natsheh (glasswork, rating 4.9), Khalil Jweiles (woodwork, rating 4.8)
+- Ramallah: Layla Al-Kilani (tatreez/embroidery), Samia Al-Kilani (tatreez bags), Layla Kanaan (modern heritage clothing)
+- Jerusalem: Zein Al-Tabari (jewelry design)
+- Gaza: Maryam Al-Ali (traditional dresses), Mariam Abu Dagga (cross-stitch, rating 5.0 - highest rated)
+- Bethlehem: Amal Mansour (tatreez bags), Sara Masri (contemporary/mugs), Amina Mansour (heritage weaving, 304 reviews)
+
+PRICE RANGES: Budget <$30 | Mid $30-$80 | Premium $80-$130 | Luxury $130-$220
+TOP SELLERS: Wristlet Keychains $28 (304 reviews), Pomegranate Bag $115 (189 reviews), Keffiyeh Mug $15 (156 reviews)
+${role === 'admin' ? '\nADMIN DATA: 15 artisans, 15 products, 6 cities, +9% MoM revenue, best category: Accessories' : ''}
+${role === 'artisan' ? `\nARTISAN RULES: Only discuss this artisan's own products. Do not reveal buyer info or other artisans' sales.` : ''}
+${role === 'buyer' ? '\nBUYER RULES: Do not share artisan financial/sales data. Help buyer discover and compare products.' : ''}
+
+INSTRUCTIONS: You are the Juthoor AI Assistant. Answer ONLY using the data above. Always cite specific product names and prices. Never give generic responses. Respond in ${isAr ? 'Arabic' : 'English'}.
+
+USER QUESTION: ${userQuery}
+
+Answer based only on the context above:`;
+
     try {
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
@@ -232,17 +268,18 @@ ROLE: Helping a GUEST VISITOR.
         body: JSON.stringify({
           model: 'mixtral-8x7b-32768',
           messages: [
-            { 
-              role: 'user', 
-              content: `${getSystemPrompt(user?.user_type || 'buyer')}\n\nUser Question: ${userQuery}` 
-            }
+            { role: 'user', content: contextBlock }
           ],
           max_tokens: 1024,
           temperature: 0.7,
         })
       });
 
-      if (!response.ok) throw new Error('API Error');
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        console.error('Chatbot: API error:', response.status, err);
+        throw new Error('API Error');
+      }
 
       const data = await response.json();
       if (data.choices && data.choices[0]) {
@@ -250,7 +287,7 @@ ROLE: Helping a GUEST VISITOR.
       }
       throw new Error('Invalid Response');
     } catch (error) {
-      console.error('Chatbot: API failed, falling back to local logic:', error);
+      console.error('Chatbot: API failed, using fallback:', error);
       return getFallbackResponse(userQuery);
     }
   };
