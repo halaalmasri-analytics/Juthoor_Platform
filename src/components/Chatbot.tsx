@@ -86,16 +86,20 @@ They are interested in their performance and feedback. Do not share personal dat
   };
 
   const generateAiResponse = async (userQuery: string) => {
+    console.log('Chatbot: Generating response for query:', userQuery);
+    
     if (!GROQ_API_KEY) {
+      console.error('Chatbot: VITE_GROQ_API_KEY is missing in environment variables.');
       return language === 'ar' 
         ? "عذراً، لم يتم تكوين مفتاح API الخاص بـ Groq بعد."
         : "Sorry, the Groq API key is not configured yet.";
     }
 
+    console.log('Chatbot: API Key found (length:', GROQ_API_KEY.length, ')');
+
     const role = user?.user_type || 'buyer';
     const systemPrompt = getSystemPrompt(role);
 
-    // Prepare message history for the API (limit to last 10 messages)
     const apiMessages = [
       { role: 'system', content: systemPrompt },
       ...messages.slice(-10).map(m => ({
@@ -106,6 +110,7 @@ They are interested in their performance and feedback. Do not share personal dat
     ];
 
     try {
+      console.log('Chatbot: Sending request to Groq API...');
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -120,13 +125,23 @@ They are interested in their performance and feedback. Do not share personal dat
         })
       });
 
+      console.log('Chatbot: Received response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Chatbot: API Error Response:', errorData);
+        throw new Error(`API returned status ${response.status}: ${JSON.stringify(errorData)}`);
+      }
+
       const data = await response.json();
+      console.log('Chatbot: API Success Data:', data);
+
       if (data.choices && data.choices[0]) {
         return data.choices[0].message.content;
       }
-      throw new Error('Invalid API response');
+      throw new Error('Invalid API response structure');
     } catch (error) {
-      console.error('Groq API Error:', error);
+      console.error('Chatbot: Final Error:', error);
       return language === 'ar'
         ? "عذراً، واجهت مشكلة في الاتصال بخادم الذكاء الاصطناعي. يرجى المحاولة مرة أخرى."
         : "Sorry, I encountered an issue connecting to the AI server. Please try again.";
