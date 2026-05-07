@@ -139,6 +139,8 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
   );
 }
 
+import { Chatbot } from './components/Chatbot';
+
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'artisans' | 'products' | 'checkout' | 'login' | 'signup' | 'profile' | 'insights' | 'artisan-dashboard' | 'buyer-dashboard' | 'admin-dashboard'>('home');
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -168,14 +170,17 @@ function App() {
   };
 
   return (
-    <ViewContent 
-      currentView={currentView} 
-      selectedProductId={selectedProductId}
-      onNavigate={handleNavigate}
-      onSelectProduct={setSelectedProductId}
-      onAuthRequired={handleAuthRequiredAction}
-      onLoginSuccess={handleLoginSuccess}
-    />
+    <>
+      <ViewContent 
+        currentView={currentView} 
+        selectedProductId={selectedProductId}
+        onNavigate={handleNavigate}
+        onSelectProduct={setSelectedProductId}
+        onAuthRequired={handleAuthRequiredAction}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      <Chatbot />
+    </>
   );
 }
 

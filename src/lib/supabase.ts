@@ -1,4 +1,13 @@
-// Supabase has been removed. Types are now in src/lib/staticData.ts.
-// This file is kept as a re-export shim so that any leftover imports
-// from `../lib/supabase` still resolve without breaking the build.
-export type { Artisan, Product, User } from './staticData';
+import { createClient } from '@supabase/supabase-js';
+import type { Artisan, Product, User } from './staticData';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase URL or Anon Key is missing. Auth will not work correctly.');
+}
+
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+
+export type { Artisan, Product, User };

@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, DEMO_ARTISAN_USER, DEMO_ADMIN_USER } from '../lib/staticData';
+import { User } from '../lib/staticData';
+import { supabase } from '../lib/supabase';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
@@ -13,87 +15,103 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Simulate a short async delay for realistic UX
-function fakeDelay(ms = 600) {
-  return new Promise<void>((resolve) => setTimeout(resolve, ms));
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper to map Supabase user to our local User type
+  const mapSupabaseUser = (sbUser: SupabaseUser): User => {
+    return {
+      id: sbUser.id,
+      email: sbUser.email || '',
+      user_type: (sbUser.user_metadata?.user_type as 'artisan' | 'buyer' | 'admin') || 'buyer',
+      full_name: sbUser.user_metadata?.full_name || sbUser.email?.split('@')[0] || 'User',
+      profile_photo_url: sbUser.user_metadata?.profile_photo_url,
+    };
+  };
+
   useEffect(() => {
-    // Simulate checking an existing session from localStorage
-    const stored = localStorage.getItem('juthoor_user');
-    if (stored) {
+    // Get initial session
+    const initAuth = async () => {
       try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('juthoor_user');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setUser(mapSupabaseUser(session.user));
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    initAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(mapSupabaseUser(session.user));
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  async function signUp(email: string, _password: string, userData: Partial<User>): Promise<void> {
-    setLoading(true);
-    await fakeDelay();
-    const newUser: User = {
-      id: `user-${Date.now()}`,
+  async function signUp(email: string, password: string, userData: Partial<User>): Promise<void> {
+    const { data, error } = await supabase.auth.signUp({
       email,
-      user_type: userData.user_type ?? 'buyer',
-      full_name: userData.full_name ?? email.split('@')[0],
-      profile_photo_url: userData.profile_photo_url,
-    };
-    
-    const users = JSON.parse(localStorage.getItem('juthoor_users') || '[]');
-    // prevent duplicates if testing with same email
-    const filteredUsers = users.filter((u: User) => u.email !== email);
-    filteredUsers.push(newUser);
-    localStorage.setItem('juthoor_users', JSON.stringify(filteredUsers));
+      password,
+      options: {
+        data: {
+          full_name: userData.full_name,
+          user_type: userData.user_type || 'buyer',
+          profile_photo_url: userData.profile_photo_url,
+        },
+      },
+    });
 
-    localStorage.setItem('juthoor_user', JSON.stringify(newUser));
-    setUser(newUser);
-    setLoading(false);
+    if (error) throw error;
+    if (data.user) {
+      setUser(mapSupabaseUser(data.user));
+    }
   }
 
-  async function signIn(email: string, _password: string): Promise<void> {
-    setLoading(true);
-    await fakeDelay();
-    
-    const users = JSON.parse(localStorage.getItem('juthoor_users') || '[]');
-    const existingUser = users.find((u: User) => u.email === email);
+  async function signIn(email: string, password: string): Promise<void> {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    const resolvedUser: User = existingUser || (
-      email === DEMO_ARTISAN_USER.email ? DEMO_ARTISAN_USER :
-      email === DEMO_ADMIN_USER.email ? DEMO_ADMIN_USER :
-      {
-          id: `user-${Date.now()}`,
-          email,
-          user_type: 'buyer',
-          full_name: email.split('@')[0],
-      }
-    );
-    localStorage.setItem('juthoor_user', JSON.stringify(resolvedUser));
-    setUser(resolvedUser);
-    setLoading(false);
+    if (error) throw error;
+    if (data.user) {
+      setUser(mapSupabaseUser(data.user));
+    }
   }
 
   async function signOut(): Promise<void> {
-    await fakeDelay(300);
-    localStorage.removeItem('juthoor_user');
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
     setUser(null);
   }
 
   async function updateUser(data: Partial<User>): Promise<void> {
-    setLoading(true);
-    await fakeDelay();
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      localStorage.setItem('juthoor_user', JSON.stringify(updatedUser));
-      setUser(updatedUser);
+    const { data: updatedData, error } = await supabase.auth.updateUser({
+      data: {
+        full_name: data.full_name,
+        profile_photo_url: data.profile_photo_url,
+        user_type: data.user_type,
+      },
+    });
+
+    if (error) throw error;
+    if (updatedData.user) {
+      setUser(mapSupabaseUser(updatedData.user));
     }
-    setLoading(false);
   }
 
   return (
