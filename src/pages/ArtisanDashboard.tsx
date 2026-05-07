@@ -377,6 +377,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                           <img 
                             src={product.image_url || PRODUCT_IMAGE_MAP[product.name_en] || productSourceData[product.name_en.trim()]?.image || '/large_display_plate.jpeg'} 
                             className="w-full h-full object-cover" 
+                            loading="lazy"
                           />
                         </div>
                         {product.name_en}
@@ -540,7 +541,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                     </label>
                     <div className="w-16 h-16 rounded-xl border bg-gray-50 flex items-center justify-center overflow-hidden">
                       {formData.image_url ? (
-                        <img src={formData.image_url} className="w-full h-full object-cover" />
+                        <img src={formData.image_url} className="w-full h-full object-cover" loading="lazy" />
                       ) : (
                         <Package className="w-8 h-8 text-gray-300" />
                       )}

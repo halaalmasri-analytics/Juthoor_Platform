@@ -112,6 +112,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
               src={displayImage}
               alt={getName()}
               className="w-full h-full object-cover transition duration-300"
+              loading="lazy"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = placeholderUrl;
               }}
@@ -254,6 +255,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
                   src={product.artisans.photo_url} 
                   alt={product.artisans.name} 
                   className="w-32 h-32 rounded-full object-cover shadow-md border-4 border-green-50"
+                  loading="lazy"
                 />
               )}
               <div className={`flex-1 text-right`}>

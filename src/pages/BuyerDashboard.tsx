@@ -57,7 +57,7 @@ export function BuyerDashboard({ onProductClick, onNavigate }: { onProductClick:
           <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
               {user.profile_photo_url ? (
-                <img src={user.profile_photo_url} className="w-full h-full rounded-full object-cover" />
+                <img src={user.profile_photo_url} className="w-full h-full rounded-full object-cover" loading="lazy" />
               ) : (
                 <UserIcon className="w-10 h-10 text-green-800" />
               )}

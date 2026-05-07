@@ -1,9 +1,24 @@
 import { useLanguage } from '../contexts/LanguageContext';
 import { Heart, Instagram, ScanLine } from 'lucide-react';
 import { JuthoorQRCode } from './JuthoorQRCode';
+import { useEffect, useState } from 'react';
 
 export function Footer() {
   const { t, dir } = useLanguage();
+  const [animateQR, setAnimateQR] = useState(false);
+
+  useEffect(() => {
+    const handleLoad = () => {
+      setTimeout(() => setAnimateQR(true), 500);
+    };
+
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
+  }, []);
 
   return (
     <footer className="bg-[#064e3b] text-white py-16 mt-20" dir={dir}>
@@ -114,11 +129,12 @@ export function Footer() {
                 </div>
                 <p className="text-green-300/80 text-xs">{t('discover_artisans')}</p>
               </div>
-              <div className="rounded-xl overflow-hidden shadow-lg border border-white/20 transition-transform hover:scale-105 duration-300">
+              <div className={`rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-500 hover:scale-105 ${animateQR ? 'opacity-100 translate-y-0 animate-fadeIn' : 'opacity-0 translate-y-4'}`}>
                 <img 
                   src="/QR.png" 
                   alt="Scan to explore" 
                   className="w-[150px] h-[150px] object-contain bg-white" 
+                  loading="lazy"
                 />
               </div>
             </div>

@@ -75,6 +75,7 @@ export function JuthoorProductCard({ product, onClick, onAuthRequired }: Product
           src={product.image_url || 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80'}
           alt={getName()}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          loading="lazy"
         />
         {(() => {
           const verifiedIds = JSON.parse(localStorage.getItem('juthoor_verified_artisans') || '[]');
