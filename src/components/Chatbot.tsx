@@ -1,28 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
 import { 
   MessageSquare, X, Send, Bot, User as UserIcon, 
-  Sparkles, TrendingUp, ShoppingBag, Loader2, Maximize2, Minimize2 
+  Sparkles, Loader2, Maximize2, Minimize2 
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { PRODUCTS, ARTISANS, User } from '../lib/staticData';
+import { PRODUCTS, ARTISANS } from '../lib/staticData';
 
 type Message = {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: Date;
 };
 
 export function Chatbot() {
-  const { user, isAuthenticated } = useAuth();
-  const { dir, t, language } = useLanguage();
+  const { user } = useAuth();
+  const { dir, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -31,11 +33,10 @@ export function Chatbot() {
   }, [messages, isTyping]);
 
   useEffect(() => {
-    // Initial greeting
     if (messages.length === 0) {
       const greeting = language === 'ar' 
-        ? `مرحباً! أنا مساعد جذور الذكي. كيف يمكنني مساعدتك اليوم؟`
-        : `Hello! I'm your Juthoor AI Assistant. How can I help you today?`;
+        ? `مرحباً! أنا مساعد جذور الذكي، أعمل بتقنية الذكاء الاصطناعي. كيف يمكنني مساعدتك اليوم؟`
+        : `Hello! I'm your Juthoor AI Assistant, powered by Groq. How can I help you today?`;
       
       setMessages([{
         id: '1',
@@ -46,64 +47,95 @@ export function Chatbot() {
     }
   }, [language]);
 
-  const generateResponse = async (query: string, userRole: string): Promise<string> => {
-    // Artificial delay to simulate Claude thinking
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const q = query.toLowerCase();
-    
-    // Admin Logic
-    if (userRole === 'admin') {
-      if (q.includes('sales') || q.includes('revenue') || q.includes('مبيعات') || q.includes('دخل')) {
-        return language === 'ar'
-          ? "إجمالي المبيعات لشهر يوليو بلغ 8,200 دولار، مع نمو مستمر بنسبة 9% شهرياً. الفخار هو الفئة الأكثر استقراراً حالياً."
-          : "Total sales for July reached $8,200, showing a steady 9% month-over-month growth. Ceramics are currently your most consistent category.";
-      }
-      if (q.includes('performance') || q.includes('artisan') || q.includes('أداء') || q.includes('حرفي')) {
-        return language === 'ar'
-          ? "يتصدر الحرفيون في رام الله وغزة الأداء حالياً. نوصي بزيادة التواصل مع حرفيي نابلس لتوسيع فئات الأعمال المعدنية."
-          : "Artisans in Ramallah and Gaza are currently leading in performance. I recommend increasing outreach to Nablus artisans to expand metal-work categories.";
-      }
+  const getSystemPrompt = (role: string) => {
+    const productsContext = PRODUCTS.map(p => ({
+      name: p.name_en,
+      name_ar: p.name_ar,
+      price: p.price_usd,
+      category: p.category,
+      artisan: p.artisans?.name
+    }));
+
+    const artisansContext = ARTISANS.map(a => ({
+      name: a.name,
+      specialty: a.craft_specialty,
+      location: a.location
+    }));
+
+    let basePrompt = `You are the Juthoor AI Assistant, a helpful and professional expert on Palestinian heritage and the Juthoor marketplace.
+Your goal is to help users navigate the platform and learn about products and artisans.
+Always be polite and respect the cultural significance of the items.
+Current Language: ${language === 'ar' ? 'Arabic' : 'English'}. Respond in the user's language.
+
+Available Data:
+Products: ${JSON.stringify(productsContext)}
+Artisans: ${JSON.stringify(artisansContext)}
+`;
+
+    if (role === 'buyer') {
+      basePrompt += `\nYou are helping a Buyer. Focus on product recommendations, pricing, and artisan stories. Do not share sensitive business data or artisan personal details beyond their public bio.`;
+    } else if (role === 'artisan') {
+      const myProducts = PRODUCTS.filter(p => p.artisan_id === user?.id);
+      basePrompt += `\nYou are helping an Artisan named ${user?.full_name}. They can ask about their own products: ${JSON.stringify(myProducts)}.
+They are interested in their performance and feedback. Do not share personal data of buyers.`;
+    } else if (role === 'admin') {
+      basePrompt += `\nYou are helping an Admin. You have full access to all platform data, including sales trends and performance insights. Be strategic and analytical.`;
     }
 
-    // Artisan Logic
-    if (userRole === 'artisan') {
-      const artisanProducts = PRODUCTS.filter(p => p.artisan_id === user?.id);
-      if (q.includes('my sales') || q.includes('performance') || q.includes('أدائي') || q.includes('مبيعاتي')) {
-        return language === 'ar'
-          ? `لديك حالياً ${artisanProducts.length} منتجات نشطة. متوسط تقييمك هو 4.8 نجوم. حققت مبيعات جيدة هذا الأسبوع!`
-          : `You currently have ${artisanProducts.length} active products. Your average rating is 4.8 stars. You've had strong sales this week!`;
-      }
-      if (q.includes('feedback') || q.includes('reviews') || q.includes('ملاحظات') || q.includes('تقييمات')) {
-        return language === 'ar'
-          ? "المشترون يثنون على جودة عملك اليدوي، خاصة التفاصيل في التطريز. يطلب البعض خيارات ألوان أكثر تنوعاً."
-          : "Buyers are praising the quality of your handiwork, especially the embroidery details. Some are requesting more diverse color options.";
-      }
+    return basePrompt;
+  };
+
+  const generateAiResponse = async (userQuery: string) => {
+    if (!GROQ_API_KEY) {
+      return language === 'ar' 
+        ? "عذراً، لم يتم تكوين مفتاح API الخاص بـ Groq بعد."
+        : "Sorry, the Groq API key is not configured yet.";
     }
 
-    // Buyer / General Logic
-    if (q.includes('product') || q.includes('best') || q.includes('recommend') || q.includes('منتج') || q.includes('أفضل') || q.includes('ترشيح')) {
-      const topProducts = PRODUCTS.slice(0, 3).map(p => language === 'ar' ? p.name_ar : p.name_en).join(', ');
+    const role = user?.user_type || 'buyer';
+    const systemPrompt = getSystemPrompt(role);
+
+    // Prepare message history for the API (limit to last 10 messages)
+    const apiMessages = [
+      { role: 'system', content: systemPrompt },
+      ...messages.slice(-10).map(m => ({
+        role: m.role,
+        content: m.content
+      })),
+      { role: 'user', content: userQuery }
+    ];
+
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama3-8b-8192',
+          messages: apiMessages,
+          temperature: 0.7,
+          max_tokens: 1024,
+        })
+      });
+
+      const data = await response.json();
+      if (data.choices && data.choices[0]) {
+        return data.choices[0].message.content;
+      }
+      throw new Error('Invalid API response');
+    } catch (error) {
+      console.error('Groq API Error:', error);
       return language === 'ar'
-        ? `أرشح لك المنتجات التالية الأكثر طلباً: ${topProducts}. هل تود معرفة تفاصيل عن أي منها؟`
-        : `I recommend our top-selling items: ${topProducts}. Would you like to know more about any of these?`;
+        ? "عذراً، واجهت مشكلة في الاتصال بخادم الذكاء الاصطناعي. يرجى المحاولة مرة أخرى."
+        : "Sorry, I encountered an issue connecting to the AI server. Please try again.";
     }
-
-    if (q.includes('price') || q.includes('cost') || q.includes('سعر') || q.includes('تكلفة')) {
-      return language === 'ar'
-        ? "تتراوح أسعارنا بين 12 دولاراً للصابون النابلسي وتصل إلى 220 دولاراً للأثواب التراثية الفاخرة. كل قطعة هي استثمار في التراث."
-        : "Our prices range from $12 for Nablus soap up to $220 for premium heritage thobes. Each piece is an investment in heritage.";
-    }
-
-    // Default Fallback
-    return language === 'ar'
-      ? "بناءً على البيانات المتاحة، يستمر التطريز (التطريز) في كونه ركيزتنا الأقوى. كيف يمكنني مساعدتك بشكل أكبر في استكشاف تراثنا؟"
-      : "Based on current data, Tatreez continues to be our strongest pillar. How else can I help you explore our heritage today?";
   };
 
   const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
     const userMsg: Message = {
       id: Date.now().toString(),
@@ -116,23 +148,17 @@ export function Chatbot() {
     setInput('');
     setIsTyping(true);
 
-    try {
-      const role = user?.user_type || 'buyer';
-      const response = await generateResponse(input, role);
-      
-      const assistantMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response,
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, assistantMsg]);
-    } catch (error) {
-      console.error('Chat error:', error);
-    } finally {
-      setIsTyping(false);
-    }
+    const aiResponse = await generateAiResponse(input);
+    
+    const assistantMsg: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: aiResponse,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, assistantMsg]);
+    setIsTyping(false);
   };
 
   if (!isOpen) {
@@ -152,9 +178,8 @@ export function Chatbot() {
   return (
     <div 
       className={`fixed ${isMinimized ? 'bottom-6' : 'bottom-6 md:bottom-10'} ${dir === 'rtl' ? 'left-6 md:left-10' : 'right-6 md:right-10'} z-50 flex flex-col transition-all duration-300 ease-in-out`}
-      style={{ width: isMinimized ? 'auto' : 'min(90vw, 400px)' }}
+      style={{ width: isMinimized ? 'auto' : 'min(90vw, 450px)' }}
     >
-      {/* Header */}
       <div className="bg-green-900 text-white p-4 rounded-t-[2rem] flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <div className="bg-white/20 p-2 rounded-xl">
@@ -162,23 +187,17 @@ export function Chatbot() {
           </div>
           <div>
             <h3 className="font-bold text-sm">{language === 'ar' ? 'مساعد جذور الذكي' : 'Juthoor AI Assistant'}</h3>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 text-[10px]">
               <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-[10px] text-green-200 uppercase tracking-widest font-bold">Online</span>
+              <span className="text-green-200 uppercase tracking-widest font-bold">Groq Powered</span>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button 
-            onClick={() => setIsMinimized(!isMinimized)}
-            className="p-2 hover:bg-white/10 rounded-lg transition"
-          >
+          <button onClick={() => setIsMinimized(!isMinimized)} className="p-2 hover:bg-white/10 rounded-lg transition">
             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
-          <button 
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-white/10 rounded-lg transition"
-          >
+          <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-lg transition">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -186,26 +205,19 @@ export function Chatbot() {
 
       {!isMinimized && (
         <>
-          {/* Messages */}
-          <div 
-            ref={scrollRef}
-            className="bg-[#fefce8]/50 backdrop-blur-sm h-[400px] overflow-y-auto p-4 space-y-4 border-x border-green-100 shadow-inner"
-          >
+          <div ref={scrollRef} className="bg-stone-50 h-[450px] overflow-y-auto p-4 space-y-4 border-x border-green-100 shadow-inner no-scrollbar">
             {messages.map((msg) => (
-              <div 
-                key={msg.id} 
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
-              >
+              <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
                 <div className={`max-w-[85%] flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className={`w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-green-900 text-white' : 'bg-white text-green-900 shadow-sm border border-green-100'}`}>
                     {msg.role === 'user' ? <UserIcon className="w-4 h-4" /> : <Sparkles className="w-4 h-4 text-amber-500" />}
                   </div>
                   <div className={`p-3.5 rounded-2xl text-sm leading-relaxed ${
                     msg.role === 'user' 
-                      ? 'bg-green-900 text-white rounded-tr-none' 
+                      ? 'bg-green-900 text-white rounded-tr-none shadow-md' 
                       : 'bg-white text-green-900 shadow-sm border border-green-50 rounded-tl-none'
                   }`}>
-                    {msg.content}
+                    <div className="whitespace-pre-wrap">{msg.content}</div>
                     <div className={`text-[10px] mt-1 opacity-50 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
@@ -224,29 +236,7 @@ export function Chatbot() {
             )}
           </div>
 
-          {/* Quick Actions */}
-          <div className="bg-white/80 p-2 border-x border-green-100 overflow-x-auto no-scrollbar flex gap-2">
-            {(user?.user_type === 'admin' ? ['Sales Insight', 'Performance'] : 
-              user?.user_type === 'artisan' ? ['My Sales', 'Feedback'] : 
-              ['Recommend', 'Pricing', 'Artisans']).map(action => (
-              <button 
-                key={action}
-                onClick={() => {
-                  setInput(action);
-                  // Trigger send manually if needed, but better to let user see it
-                }}
-                className="whitespace-nowrap px-3 py-1.5 bg-green-50 text-green-900 text-xs font-bold rounded-lg border border-green-100 hover:bg-green-100 transition"
-              >
-                {action}
-              </button>
-            ))}
-          </div>
-
-          {/* Input */}
-          <form 
-            onSubmit={handleSend}
-            className="bg-white p-4 rounded-b-[2rem] border border-green-100 shadow-xl flex gap-2"
-          >
+          <form onSubmit={handleSend} className="bg-white p-4 rounded-b-[2rem] border border-green-100 shadow-xl flex gap-2">
             <input 
               type="text" 
               value={input}
