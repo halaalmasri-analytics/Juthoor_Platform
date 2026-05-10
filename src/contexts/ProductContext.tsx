@@ -20,23 +20,31 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     if (stored) {
       try {
         const parsed: Product[] = JSON.parse(stored);
-        // Sync mock product images with the latest static data
-        // AND remove any mock products that were deleted from staticData
-        const synced = parsed.filter(p => {
-          const isMock = p.id.startsWith('product-');
-          if (isMock) {
-            return PRODUCTS.some(sp => sp.id === p.id);
-          }
-          return true; // Keep artisan-added products
-        }).map(p => {
+        
+        // 1. Identify mock products from storage that still exist in static data
+        // and keep user-added products (which are also in storage)
+        const storageMocks = parsed.filter(p => {
+          const isStatic = PRODUCTS.some(sp => sp.id === p.id);
+          return isStatic || p.id.includes('-'); // This keeps both static and user-added ones
+        });
+
+        // 2. Find any products in static data that are MISSING from storage
+        const missingFromStorage = PRODUCTS.filter(sp => !parsed.some(p => p.id === sp.id));
+
+        // 3. Combine them, ensuring static data takes precedence for base products
+        const synced = [...storageMocks, ...missingFromStorage].map(p => {
           const staticProduct = PRODUCTS.find(sp => sp.id === p.id);
           if (staticProduct) {
-            return { ...p, image_url: staticProduct.image_url };
+            return { ...p, ...staticProduct }; // Update with latest info from staticData.ts
           }
           return p;
         });
-        setProducts(synced);
-        localStorage.setItem('juthoor_products', JSON.stringify(synced));
+
+        // 4. Remove duplicates (in case of overlap logic)
+        const uniqueSynced = Array.from(new Map(synced.map(p => [p.id, p])).values());
+
+        setProducts(uniqueSynced);
+        localStorage.setItem('juthoor_products', JSON.stringify(uniqueSynced));
       } catch (e) {
         setProducts(PRODUCTS);
       }
