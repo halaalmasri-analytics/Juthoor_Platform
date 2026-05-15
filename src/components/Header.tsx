@@ -44,7 +44,7 @@ export function Header({ onNavigate, currentView = 'home' }: { onNavigate?: (vie
 
   return (
     <header className="sticky top-0 z-40 bg-white shadow-md" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/image.png" alt="Juthoor" className="h-12 w-12" />

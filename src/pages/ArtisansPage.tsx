@@ -45,17 +45,17 @@ export function ArtisansPage({ onProductClick, onAuthRequired: _onAuthRequired }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-green-900 mb-4">{t('our_artisans')}</h1>
+    <div className="min-h-screen bg-gray-50 py-8 md:py-12" dir={dir}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-8 md:mb-12 animate-fadeIn">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-green-900 mb-4">{t('our_artisans')}</h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             {t('artisans_subtitle')}
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-md mb-12">
+        <div className="bg-white p-4 md:p-8 rounded-2xl shadow-md mb-8 md:mb-12">
           <div className="relative mb-6 max-w-3xl mx-auto">
             <Search className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-3.5 text-gray-400 w-5 h-5`} />
             <input 
@@ -85,7 +85,7 @@ export function ArtisansPage({ onProductClick, onAuthRequired: _onAuthRequired }
         </div>
 
         {/* Artisans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {filteredArtisans.map(artisan => {
             const products = getArtisanProducts(artisan.id);
 

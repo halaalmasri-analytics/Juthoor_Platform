@@ -2,14 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base font for LTR languages */
+/* Base font for LTR languages and responsive root text size */
 html {
   font-family: 'Inter', sans-serif;
+  font-size: clamp(14px, 1.5vw + 10px, 16px);
 }
 
 /* Arabic font for RTL */
 html[dir="rtl"] {
   font-family: 'Cairo', sans-serif;
+}
+
+@layer base {
+  img, video {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
 }
 
 @layer utilities {

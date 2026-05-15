@@ -87,7 +87,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6 py-12 w-full flex-grow">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-12 w-full flex-grow">
         <button 
           onClick={onBack}
           className="flex items-center gap-2 text-green-900 hover:text-green-700 font-semibold mb-8 transition"
@@ -105,9 +105,9 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
           />
         )}
 
-        <div className="grid md:grid-cols-2 gap-12 bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12 bg-white rounded-2xl shadow-xl overflow-hidden p-4 md:p-8">
           {/* Image Section */}
-          <div className="relative h-96 md:h-[600px] w-full bg-gray-100 rounded-xl overflow-hidden shadow-inner group">
+          <div className="relative h-64 sm:h-96 md:h-[600px] w-full bg-gray-100 rounded-xl overflow-hidden shadow-inner group">
             <img 
               src={displayImage}
               alt={getName()}
@@ -245,7 +245,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
 
         {/* Designer / Artisan Card */}
         {product.artisans && (
-          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto">
+          <div className="mt-8 md:mt-12 bg-white rounded-2xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-4">
               <span className="font-arabic">لقاء مع المصمم</span> | <span className="font-sans">Meet the Designer</span>
             </h3>

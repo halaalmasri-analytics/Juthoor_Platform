@@ -28,8 +28,8 @@ export function Signup({ onBack, onNavigateToLogin, onSuccess }: { onBack: () =>
   };
 
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center p-6" dir={dir}>
-      <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 border border-green-100 animate-fadeIn">
+    <div className="min-h-screen bg-green-50 flex items-center justify-center p-4 md:p-6" dir={dir}>
+      <div className="max-w-md w-full bg-white rounded-3xl md:rounded-[2.5rem] shadow-2xl p-6 md:p-10 border border-green-100 animate-fadeIn">
         <div className="text-center mb-10">
           <img src="/image.png" alt="Juthoor" className="h-20 w-20 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-green-900">{t('join_journey')}</h1>

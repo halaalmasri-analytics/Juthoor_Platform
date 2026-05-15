@@ -56,11 +56,11 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
   });
 
   return (
-    <div className="min-h-screen bg-white py-12" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen bg-white py-8 md:py-12" dir={dir}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Header Section */}
-        <div className="text-center mb-16 animate-fadeIn">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-green-900 mb-6 font-serif">
+        <div className="text-center mb-8 md:mb-16 animate-fadeIn">
+          <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-green-900 mb-4 md:mb-6 font-serif">
             {t('rooted_heritage')}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -69,7 +69,7 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
         </div>
 
         {/* Search and Filters Bar */}
-        <div className="bg-green-50/50 p-8 rounded-3xl mb-16 border border-green-100 shadow-sm">
+        <div className="bg-green-50/50 p-4 md:p-8 rounded-3xl mb-8 md:mb-16 border border-green-100 shadow-sm">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Search Input */}
             <div className="relative flex-[2]">
@@ -170,7 +170,7 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
 
         {/* Product Cards Grid */}
         {displayProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
             {displayProducts.map((product, index) => (
               <div 
                 key={product.id}

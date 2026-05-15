@@ -238,7 +238,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
       <Header onNavigate={onNavigate} currentView="artisan-dashboard" />
 
       <section className="py-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-green-900">Artisan Dashboard</h1>
             <p className="text-gray-600 mt-2">Welcome back, {user?.full_name}! Manage your products and track your success</p>
@@ -249,7 +249,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-12 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-6 md:space-y-8">
         
         {/* Verification Status Card */}
         <div className={`p-6 rounded-2xl flex items-center gap-4 shadow-sm border ${isVerified ? 'bg-green-50 border-green-200' : 'bg-orange-50 border-orange-200'}`}>
@@ -269,7 +269,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
         </div>
 
         {/* Stats Grid */}
-        <div className="grid md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <div className="bg-white rounded-2xl shadow-sm p-6 flex items-center justify-between">
             <div>
               <p className="text-gray-500 text-sm font-semibold">Total Products</p>
@@ -300,7 +300,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Revenue Chart */}
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6 min-w-0">
             <h2 className="text-xl font-bold text-green-900 mb-6">Monthly Revenue</h2>
@@ -344,7 +344,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
 
         {/* Products Table */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 md:p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-green-900">Your Listed Products</h2>
               <p className="text-sm text-gray-500 mt-1">Categories: Tatreez, Olive Oil, Ceramics, Olive Wood, Glasswork</p>
@@ -431,7 +431,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-scaleUp">
+          <div className="bg-white rounded-3xl md:rounded-[2.5rem] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-scaleUp">
             <div className="p-8 border-b flex justify-between items-center bg-green-50/50">
               <h2 className="text-2xl font-bold text-green-900">{isEditing ? t('edit_product') : t('add_new_product')}</h2>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-white rounded-full transition text-gray-500">
@@ -440,7 +440,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
             </div>
             
             <form onSubmit={handleSubmit} className="p-8 overflow-y-auto space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">{t('product_name')} (EN)</label>
                   <select 
@@ -472,7 +472,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">{t('price')}</label>
                   <select 
@@ -516,7 +516,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-bold text-gray-700">{t('stock_quantity')}</label>
                   <select 

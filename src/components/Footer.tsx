@@ -21,9 +21,9 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="bg-[#064e3b] text-white py-16 mt-20" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-[#064e3b] text-white py-10 md:py-16 mt-12 md:mt-20" dir={dir}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-12">
           <div>
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
               <img src="/image.png" alt="Juthoor" className="h-8 w-8" />
@@ -99,7 +99,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-green-700/50 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
             <div className="flex flex-col items-center md:items-start gap-4">
               <p className="text-green-100 flex items-center gap-2">
                 {t('made_with_love')} <Heart className="w-4 h-4 text-red-500 fill-red-500" /> {t('for_palestine')}
@@ -120,8 +120,8 @@ export function Footer() {
               {t('juthoor')} - {t('rooted_reaching')}
             </p>
 
-            {/* QR Code Section */}
-            <div className="flex items-center gap-4">
+            {/* QR Code Section — hidden on very small phones */}
+            <div className="hidden sm:flex items-center gap-4">
               <div className="text-right">
                 <div className="flex items-center gap-1.5 text-green-200 mb-1 justify-end">
                   <ScanLine className="w-4 h-4" />

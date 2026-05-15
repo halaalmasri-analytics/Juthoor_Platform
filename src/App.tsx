@@ -48,12 +48,12 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
       <Header onNavigate={onNavigate} currentView={currentView} />
       <Hero onNavigate={onNavigate} />
 
-      <section className="py-20 bg-gradient-to-b from-white to-green-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className={`text-4xl font-bold text-green-900 mb-4 text-center`}>
+      <section className="py-10 md:py-20 bg-gradient-to-b from-white to-green-50">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <h2 className={`text-3xl md:text-4xl font-bold text-green-900 mb-3 md:mb-4 text-center`}>
             {t('featured_products')}
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p className="text-center text-gray-600 mb-8 md:mb-12 text-base md:text-lg">
             {t('discover_crafts')}
           </p>
 
@@ -62,7 +62,7 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
               <Loader2 className="w-12 h-12 animate-spin text-green-900" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               {displayProducts.slice(0, 3).map((product) => (
                 <JuthoorProductCard 
                   key={product.id} 
@@ -82,13 +82,13 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
         </div>
       </section>
 
-      <section className="py-20 bg-white" dir={dir}>
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-green-900 mb-16">
+      <section className="py-10 md:py-20 bg-white" dir={dir}>
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-green-900 mb-8 md:mb-16">
             {t('why_juthoor')}
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             <div className="text-center">
               <div className="mb-4 flex justify-center">
                 <div className="bg-green-100 p-4 rounded-full">

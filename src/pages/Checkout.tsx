@@ -33,7 +33,7 @@ export function Checkout({ onBack }: { onBack: () => void }) {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center" dir={dir}>
+      <div className="min-h-screen bg-white flex items-center justify-center p-4 md:p-6 text-center" dir={dir}>
         <div className="max-w-md animate-fadeIn">
           <div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8">
             <CheckCircle className="w-12 h-12 text-green-600" />
@@ -54,8 +54,8 @@ export function Checkout({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12" dir={dir}>
-      <div className="max-w-4xl mx-auto px-6">
+    <div className="min-h-screen bg-gray-50 py-8 md:py-12" dir={dir}>
+      <div className="max-w-4xl mx-auto px-4 md:px-6">
         <button 
           onClick={onBack}
            className="flex items-center gap-2 text-green-900 hover:text-green-700 font-semibold mb-8 transition"
@@ -64,7 +64,7 @@ export function Checkout({ onBack }: { onBack: () => void }) {
           {t('back_to_cart')}
         </button>
 
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-12">
           {/* Order Summary */}
           <div className="order-2 md:order-1">
             <h2 className="text-2xl font-bold text-green-900 mb-6">{t('order_summary')}</h2>
@@ -105,7 +105,7 @@ export function Checkout({ onBack }: { onBack: () => void }) {
           {/* Payment Section */}
           <div className="order-1 md:order-2">
             <h2 className="text-2xl font-bold text-green-900 mb-6">{t('payment')}</h2>
-            <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 border border-gray-100">
               <div className="flex gap-4 mb-8">
                 <button 
                   onClick={() => setPaymentMethod('card')}

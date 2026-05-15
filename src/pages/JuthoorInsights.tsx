@@ -103,12 +103,12 @@ export function JuthoorInsights() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12" dir={dir}>
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen bg-gray-50 py-8 md:py-12" dir={dir}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-10 gap-4">
           <div>
-            <h1 className="text-4xl font-extrabold text-green-900 mb-2 font-serif tracking-tight">{t('juthoor_insights')}</h1>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-green-900 mb-2 font-serif tracking-tight">{t('juthoor_insights')}</h1>
             <p className="text-gray-500 font-medium">{t('insights_subtitle')}</p>
           </div>
           <div className="flex gap-3">
@@ -124,7 +124,7 @@ export function JuthoorInsights() {
         </div>
 
         {/* KPI Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-10">
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-green-100/50">
             <div className="flex items-center justify-between mb-4">
               <div className="bg-green-100 p-3 rounded-2xl text-green-900">
@@ -183,8 +183,8 @@ export function JuthoorInsights() {
         </div>
 
         {/* Charts Section */}
-        <div className="grid lg:grid-cols-3 gap-10 mb-10">
-          <div className="lg:col-span-2 bg-white p-10 rounded-[2.5rem] shadow-md border border-gray-100">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-10 mb-8 md:mb-10">
+          <div className="lg:col-span-2 bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-md border border-gray-100">
              <div className="flex justify-between items-center mb-8">
                <h2 className="text-xl font-bold text-green-900">{t('revenue_performance')}</h2>
                <div className="flex gap-2 text-xs font-bold text-gray-400">
@@ -217,7 +217,7 @@ export function JuthoorInsights() {
              </div>
           </div>
 
-          <div className="bg-white p-10 rounded-[2.5rem] shadow-md border border-gray-100">
+          <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-md border border-gray-100">
             <h2 className="text-xl font-bold text-green-900 mb-8">{t('sales_by_category')}</h2>
             <div className="h-[300px] w-full">
                {mounted && (
@@ -248,7 +248,7 @@ export function JuthoorInsights() {
         </div>
 
         {/* Verification Requests Section */}
-        <div className="bg-white p-10 rounded-[2.5rem] shadow-md border border-gray-100 mb-10">
+        <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-md border border-gray-100 mb-8 md:mb-10">
           <h2 className="text-xl font-bold text-green-900 mb-6">{t('verification_requests')}</h2>
           
           {pendingArtisans.length === 0 ? (
@@ -310,8 +310,8 @@ export function JuthoorInsights() {
         </div>
 
         {/* Artisan Performance & AI Box */}
-        <div className="grid lg:grid-cols-2 gap-10">
-           <div className="bg-white p-10 rounded-[2.5rem] shadow-md border border-gray-100">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-10 mb-8 md:mb-12">
+           <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-md border border-gray-100">
               <h2 className="text-xl font-bold text-green-900 mb-8">{t('top_artisans')}</h2>
               <div className="space-y-6">
                 {artisanPerformance.map((artisan, index) => (
@@ -337,7 +337,7 @@ export function JuthoorInsights() {
               </div>
            </div>
 
-           <div className="bg-green-900 p-10 rounded-[2.5rem] shadow-xl text-white relative overflow-hidden">
+           <div className="bg-green-900 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-xl text-white relative overflow-hidden">
              <div className="absolute top-0 right-0 p-8 opacity-10">
                <Brain className="w-64 h-64" />
              </div>
