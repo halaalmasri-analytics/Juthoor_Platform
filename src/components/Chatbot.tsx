@@ -189,7 +189,7 @@ ROLE: Helping a GUEST VISITOR.
     // FALLBACK LOGIC: If API fails or key is missing
     const getFallbackResponse = (query: string) => {
       const q = query.toLowerCase();
-      const isAr = language === 'ar';
+      const isAr = /[\u0600-\u06FF]/.test(q);
 
       // 1. Check for product mentions
       const matchedProduct = PRODUCTS.find(p => 
@@ -223,7 +223,8 @@ ROLE: Helping a GUEST VISITOR.
     }
 
     const role = user?.user_type || 'guest';
-    const isAr = language === 'ar';
+    const isArQuery = /[\u0600-\u06FF]/.test(userQuery);
+    const targetLanguage = isArQuery ? 'Arabic' : 'English';
 
     // Build a self-contained context block embedded directly in the user message
     const contextBlock = `
@@ -252,9 +253,9 @@ ${role === 'admin' ? '\nADMIN DATA: 15 artisans, 15 products, 6 cities, +9% MoM 
 ${role === 'artisan' ? `\nARTISAN RULES: Only discuss this artisan's own products. Do not reveal buyer info or other artisans' sales.` : ''}
 ${role === 'buyer' ? '\nBUYER RULES: Do not share artisan financial/sales data. Help buyer discover and compare products.' : ''}
 
-INSTRUCTIONS: You are the Juthoor AI Assistant. Answer ONLY using the data above. Always cite specific product names and prices. Never give generic responses. Respond in ${isAr ? 'Arabic' : 'English'}.
-
-USER QUESTION: ${userQuery}
+INSTRUCTIONS: You are the Juthoor AI Assistant. Answer ONLY using the data above. Always cite specific product names and prices. Never give generic responses. Respond ONLY in ${targetLanguage}. Do not translate the user's question, just answer in ${targetLanguage}.
+ 
+ USER QUESTION: ${userQuery}
 
 Answer based only on the context above:`;
 
