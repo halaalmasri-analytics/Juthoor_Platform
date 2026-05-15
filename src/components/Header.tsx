@@ -47,7 +47,7 @@ export function Header({ onNavigate, currentView = 'home' }: { onNavigate?: (vie
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/image.png" alt="Juthoor" className="h-14 w-14 rounded-full bg-white shadow-sm p-1" />
+            <img src="/logo.png" alt="Juthoor Logo" style={{ width: '55px', height: '55px', objectFit: 'contain' }} />
             <div>
               <h1 className="text-2xl font-bold text-green-900">{t('juthoor')}</h1>
               <p className="text-xs text-amber-600 font-semibold">{t('tagline')}</p>
