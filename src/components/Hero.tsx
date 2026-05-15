@@ -82,7 +82,6 @@ export function Hero({ onNavigate }: HeroProps) {
         muted         // Required for autoplay on iOS & Android Chrome
         playsInline   // Required for inline play on iOS (prevents fullscreen takeover)
         preload="auto"
-        style={{ backgroundColor: '#1a1a1a' }}
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
         {/*
