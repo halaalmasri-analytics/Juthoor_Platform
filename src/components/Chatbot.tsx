@@ -35,8 +35,8 @@ export function Chatbot() {
   useEffect(() => {
     if (messages.length === 0) {
       const greeting = language === 'ar' 
-        ? `مرحباً! أنا مساعد جذور الذكي، أعمل بتقنية الذكاء الاصطناعي. كيف يمكنني مساعدتك اليوم؟`
-        : `Hello! I'm your Juthoor AI Assistant, powered by Groq. How can I help you today?`;
+        ? `مرحباً! أنا مساعد جذور الذكي. كيف يمكنني مساعدتك اليوم؟`
+        : `Hello! I'm your Juthoor AI Assistant. How can I help you today?`;
       
       setMessages([{
         id: '1',
@@ -47,217 +47,123 @@ export function Chatbot() {
     }
   }, [language]);
 
-  const getSystemPrompt = (role: string) => {
-    const isAr = language === 'ar';
+  const getSystemPrompt = () => {
+    return `You are the Juthoor AI Assistant — a knowledgeable, warm, and culturally respectful guide for the Juthoor Palestinian Artisan Marketplace.
 
-    const platformData = `
-=== JUTHOOR PLATFORM — COMPLETE REFERENCE DATA ===
+CRITICAL LANGUAGE RULE:
+- Detect the language of the customer's message
+- If they write in Arabic → respond ONLY in Arabic, nothing else
+- If they write in English → respond ONLY in English, nothing else
+- NEVER mix languages in a single response
+- NEVER translate the user's question
+- Just respond directly in their language
 
-📍 ARTISANS BY CITY & SPECIALTY:
+PERSONALITY:
+- Warm, friendly, and authentic
+- Knowledgeable about Palestinian crafts and products
+- Patient and helpful with every question
+- Proud of Palestinian heritage
 
-NABLUS (specializes in Tatreez Embroidery & Metal Craft):
-  • Sami Al-Kurd — Wood & Metal Craft | Rating 4.8 | Products: Heritage Wall Hooks ($25–$40)
-  • Omar Haddad — Hand-painted Ceramics | Rating 4.7 | Products: Palestine Map Ceramic Plate ($26)
-  • Fatima & Omar — Metal & Micro-Tatreez | Rating 4.7 | Products: The Nabulsia Accessory Set ($55)
+PLATFORM DATA:
 
-HEBRON (specializes in Glasswork & Woodwork):
-  • Ibrahim Al-Natsheh — Hebron Glasswork | Rating 4.9 | Products: Hebron Glass Set (Cup $10, Medium Plate $22, Large Plate $30)
-  • Khalil Jweiles — Woodwork & Inlay | Rating 4.8 | Products: Carved Walnut Heritage Mirror ($78)
+PRODUCTS & PRICES:
 
-RAMALLAH (specializes in Tatreez, Ceramics & Modern Heritage):
-  • Layla Al-Kilani — Embroidery/Tatreez | Rating 4.9 | Products: Embroidered Mirrors ($18, Wall Mirror $65)
-  • Lina Khoury — Ceramics | Rating 4.8 | (ceramic specialist)
-  • Samia Al-Kilani — Traditional Tatreez | Rating 4.9 | Products: The Pomegranate Bag ($115) — 189 reviews
-  • Layla Kanaan — Modern Heritage Clothing | Rating 4.9 | Products: Map Hoodie ($110), Key Hoodie ($125), Heritage Wall Hanging ($85)
+Tatreez Dresses & Clothing:
+- Pink Heritage Dress — $180 (by Maryam Al-Ali, Gaza)
+- Traditional Red Dress — $220 (by Maryam Al-Ali, Gaza)
+- Map Hoodie — $110 (by Layla Kanaan, Ramallah)
+- Key Hoodie — $125 (by Layla Kanaan, Ramallah)
 
-JERUSALEM (specializes in Jewelry & Traditional Textiles):
-  • Zein Al-Tabari — Jewelry Design | Rating 4.8 | Products: Tatreez Earrings ($35), Map Necklace ($45), Necklace Pal ($50)
+Bags & Accessories:
+- Zaitouna Tatreez Bag — $85 (by Amal Mansour, Bethlehem)
+- Pomegranate Bag — $115 (by Samia Al-Kilani, Ramallah) - 189 reviews
+- Ard Al-Khayr Bag — $120 (by Amal Mansour, Bethlehem)
 
-GAZA (specializes in Traditional Dresses & Cross-stitch):
-  • Maryam Al-Ali — Traditional Dresses | Rating 4.9 | Products: Pink Heritage Dress ($180), Traditional Red Dress ($220)
-  • Mariam Abu Dagga — Heavy Cross-stitch | Rating 5.0 ⭐ (highest rated artisan on platform)
+Glass & Ceramics:
+- Hebron Glass Cup — $10 (by Ibrahim Al-Natsheh, Hebron)
+- Love is Palestine Keffiyeh Mug — $15 (by Sara Masri, Bethlehem) - 156 reviews
+- Hebron Glass Medium Plate — $22
+- Palestine Map Ceramic Plate — $26 (by Omar Haddad, Nablus)
+- Hebron Glass Large Plate — $30
 
-BETHLEHEM (specializes in Accessories & Heritage Weaving):
-  • Amal Mansour — Accessory Design | Rating 4.9 | Products: Tatreez Bags — Zaitouna Bag ($85), Ard Al-Khayr Bag ($120)
-  • Sara Masri — Contemporary Design | Rating 4.9 | Products: "Love is Palestine" Keffiyeh Mug ($15)
-  • Amina Mansour — Heritage Weaving | Rating 4.9 | Products: Heritage Woven Wristlet Keychains Set of 3 ($28) — 304 reviews, BEST SELLER
+Jewelry & Accessories:
+- Wedding Souvenirs — $12
+- Heritage Woven Wristlet Keychains Set of 3 — $28 (by Amina Mansour, Bethlehem) - BESTSELLER - 304 reviews
+- Tatreez Earrings — $35 (by Zein Al-Tabari, Jerusalem)
+- Map Necklace — $45 (by Zein Al-Tabari, Jerusalem)
+- Necklace Pal — $50
+- Nabulsia Accessory Set — $55 (by Fatima & Omar, Nablus)
 
----
+Home Decor:
+- Heritage Wall Hooks — $25-$40 (by Sami Al-Kurd, Nablus)
+- Carved Walnut Heritage Mirror — $78 (by Khalil Jweiles, Hebron)
+- Heritage Wall Hanging — $85 (by Layla Kanaan, Ramallah)
 
-🛍️ PRODUCTS BY CATEGORY WITH SPECIFIC NAMES & PRICES:
+TOP ARTISANS:
+- Mariam Abu Dagga, Gaza: Rating 5.0 ⭐ (highest rated)
+- Layla Kanaan, Ramallah: Rating 4.9
+- Ibrahim Al-Natsheh, Hebron: Rating 4.9
+- Samia Al-Kilani, Ramallah: Rating 4.9
+- Amina Mansour, Bethlehem: Rating 4.9
 
-TATREEZ DRESSES & CLOTHING ($80–$220):
-  • Pink Heritage Dress — $180 | By Maryam Al-Ali, Gaza | Hand-embroidered tatreez
-  • Traditional Red Dress — $220 | By Maryam Al-Ali, Gaza | Premium heritage thobe
-  • The Map Hoodie — $110 | By Layla Kanaan, Ramallah | 3D embroidered Palestine map
-  • The Key Hoodie — $125 | By Layla Kanaan, Ramallah | "Key of Return" embroidery, rated 5.0/5
+TOP BESTSELLERS:
+1. Heritage Woven Wristlet Keychains — $28 (304 reviews)
+2. Pomegranate Bag — $115 (189 reviews)
+3. Love is Palestine Keffiyeh Mug — $15 (156 reviews)
 
-OLIVE WOOD CRAFTS ($25–$85):
-  • Heritage Wall Hooks (Key Hook) — $25 | By Sami Al-Kurd, Nablus | Functional olive wood art
-  • Heritage Wall Hooks (Large) — $40 | By Sami Al-Kurd, Nablus
-  • Juthoor Heritage Wall Hanging — $85 | By Layla Kanaan, Ramallah | Natural linen & wooden rod
+CITIES:
+- Nablus: Tatreez, Metal Craft, Ceramics
+- Hebron: Glasswork, Woodwork
+- Ramallah: Tatreez, Ceramics, Modern Heritage
+- Jerusalem: Jewelry Design
+- Gaza: Traditional Dresses, Cross-stitch
+- Bethlehem: Accessories, Heritage Weaving
 
-CERAMICS & POTTERY ($10–$80):
-  • Hebron Glass Cup — $10 | By Ibrahim Al-Natsheh, Hebron | Authentic Hebron blue glass
-  • "Love is Palestine" Keffiyeh Mug — $15 | By Sara Masri, Bethlehem | Rating 4.9, 156 reviews
-  • Hebron Glass Medium Plate — $22 | By Ibrahim Al-Natsheh, Hebron
-  • Palestine Map Ceramic Plate — $26 | By Omar Haddad, Nablus | Map of Palestine with Arabic calligraphy
-  • Hebron Glass Large Display Plate — $30 | By Ibrahim Al-Natsheh, Hebron
-
-HANDWOVEN & TATREEZ BAGS ($40–$120):
-  • Tatreez Bags - Zaitouna Bag — $85 | By Amal Mansour, Bethlehem | Contemporary tatreez design
-  • The Pomegranate Bag — $115 | By Samia Al-Kilani, Ramallah | Al-Subul motifs, olive wood handles, 189 reviews
-  • Tatreez Bags - Ard Al-Khayr Bag — $120 | By Amal Mansour, Bethlehem | Premium heritage bag
-
-JEWELRY ($35–$55):
-  • Tatreez Earrings — $35 | By Zein Al-Tabari, Jerusalem
-  • Map Necklace — $45 | By Zein Al-Tabari, Jerusalem | Palestine map pendant
-  • The Nabulsia Accessory Set (Earrings + Bracelet) — $55 | By Fatima & Omar, Nablus | Micro-tatreez on metal
-
-ACCESSORIES & GIFTS ($12–$78):
-  • Wedding Souvenirs set — $12 | By Layla Al-Kilani, Ramallah
-  • Heritage Woven Wristlet Keychains (Set of 3) — $28 | By Amina Mansour, Bethlehem | BESTSELLER, 304 reviews
-  • Carved Walnut Heritage Mirror — $78 | By Khalil Jweiles, Hebron | Walnut wood + blue tatreez inlay
-
----
-
-💰 PRICE RANGES SUMMARY:
-  • Budget-friendly (under $30): Glass cups, mugs, keychains, wedding souvenirs, ceramic plates
-  • Mid-range ($30–$80): Jewelry, glass sets, mirrors, wall hooks, accessories
-  • Premium ($80–$130): Tatreez bags, hoodies, wall hangings, heritage bags
-  • Luxury ($130–$220): Heritage thobes and traditional embroidered dresses
-
-🏆 TOP 3 BESTSELLERS:
-  1. Heritage Woven Wristlet Keychains — $28 (304 reviews)
-  2. The Pomegranate Bag — $115 (189 reviews)
-  3. "Love is Palestine" Keffiyeh Mug — $15 (156 reviews)
-`;
-
-    let systemPrompt = `You are the Juthoor AI Assistant — a knowledgeable and warm guide for the Juthoor Palestinian Artisan Marketplace.
-
-CRITICAL RULES:
-1. ALWAYS cite specific product names, exact prices, and artisan names from the data below.
-2. NEVER give vague or generic answers — every answer must reference real data.
-3. When asked about a category (dresses, bags, ceramics, etc.), list the specific products with their prices.
-4. Respond in ${isAr ? 'Arabic' : 'English'} language.
-5. Be warm, culturally respectful, and proud of Palestinian heritage.
-
-${platformData}
-`;
-
-    if (role === 'buyer') {
-      systemPrompt += `
-ROLE: Helping a BUYER.
-- When they ask about products, give specific product names and prices from the data.
-- For category questions (e.g. "do you have bags?"), list ALL relevant products with prices.
-- Suggest budget options and premium options when relevant.
-- Do NOT share artisan business/sales data.
-- Highlight the cultural significance and heritage story of products when relevant.
-`;
-    } else if (role === 'artisan') {
-      const myProducts = PRODUCTS.filter(p => p.artisan_id === user?.id);
-      systemPrompt += `
-ROLE: Helping ARTISAN "${user?.full_name || 'our artisan'}".
-My products listed on Juthoor: ${JSON.stringify(myProducts.map(p => ({ name: p.name_en, price: p.price_usd, rating: p.average_rating, reviews: p.total_reviews })))}
-- Provide advice on product performance, pricing strategy, and presentation.
-- Compare their ratings to platform averages (4.85 avg).
-- Do NOT reveal buyer personal data or other artisans' private sales figures.
-`;
-    } else if (role === 'admin') {
-      systemPrompt += `
-ROLE: Helping a PLATFORM ADMIN.
-- Full access to all platform data.
-- Platform stats: 15 artisans, 15+ products, 6 cities covered, +9% MoM revenue growth.
-- Best category: Accessories. Top-rated artisan: Mariam Abu Dagga (5.0). Most reviewed: Wristlet Keychains (304 reviews).
-- Provide strategic insights on category trends, artisan performance gaps, and growth opportunities.
-`;
-    } else {
-      systemPrompt += `
-ROLE: Helping a GUEST VISITOR.
-- Introduce Juthoor as Palestine's premier artisan marketplace.
-- Share 2-3 specific products as examples with real names and prices.
-- Encourage them to create an account to purchase.
-`;
-    }
-
-    return systemPrompt;
+RULES:
+1. Always cite specific product names and exact prices
+2. Never give vague or generic answers
+3. When asked about a category, list all relevant products with prices
+4. Be brief and direct
+5. Ask clarifying questions if needed
+6. Never make up information
+7. Highlight cultural significance when relevant`;
   };
 
   const generateAiResponse = async (userQuery: string) => {
     console.log('Chatbot: Generating response for query:', userQuery);
     
-    // FALLBACK LOGIC: If API fails or key is missing
     const getFallbackResponse = (query: string) => {
       const q = query.toLowerCase();
       const isAr = /[\u0600-\u06FF]/.test(q);
 
-      // 1. Check for product mentions
       const matchedProduct = PRODUCTS.find(p => 
         q.includes(p.name_en.toLowerCase()) || (p.name_ar && q.includes(p.name_ar))
       );
       if (matchedProduct) {
         return isAr 
-          ? `نعم، لدينا ${matchedProduct.name_ar}. سعره ${matchedProduct.price_usd}$ وهو من فئة ${matchedProduct.category}. هل تود معرفة المزيد؟`
-          : `Yes, we have the ${matchedProduct.name_en}. It costs $${matchedProduct.price_usd} and belongs to the ${matchedProduct.category} category. Would you like to know more?`;
+          ? `نعم، لدينا ${matchedProduct.name_ar}. سعره $${matchedProduct.price_usd} وهو من فئة ${matchedProduct.category}. هل تود معرفة المزيد؟`
+          : `Yes, we have the ${matchedProduct.name_en}. It costs $${matchedProduct.price_usd} in the ${matchedProduct.category} category. Would you like to know more?`;
       }
 
-      // 2. Check for general questions
       if (q.includes('price') || q.includes('cost') || q.includes('سعر')) {
-        return isAr ? "تتراوح أسعارنا بين 12$ و 220$. هل تبحث عن فئة معينة؟" : "Our prices range from $12 to $220. Are you looking for a specific category?";
+        return isAr ? "أسعارنا تتراوح من $12 إلى $220. هل تبحث عن فئة معينة؟" : "Our prices range from $12 to $220. Are you looking for a specific category?";
       }
       if (q.includes('artisan') || q.includes('حرفي')) {
-        return isAr ? "نحن نعمل مع أكثر من 150 حرفياً فلسطينياً مبدعاً. يمكنك رؤيتهم في صفحة الحرفيين." : "We work with over 150 talented Palestinian artisans. You can see them on the Artisans page.";
+        return isAr ? "نعمل مع حرفيين فلسطينيين مبدعين من نابلس والخليل ورام الله والقدس وغزة وبيت لحم." : "We work with talented Palestinian artisans from Nablus, Hebron, Ramallah, Jerusalem, Gaza, and Bethlehem.";
       }
-      if (q.includes('location') || q.includes('shipping') || q.includes('شحن')) {
-        return isAr ? "نشحن من فلسطين إلى جميع أنحاء العالم! يستغرق الشحن عادة من 7 إلى 14 يوماً." : "We ship from Palestine to the whole world! Shipping usually takes 7-14 days.";
+      if (q.includes('ship') || q.includes('shipping') || q.includes('شحن')) {
+        return isAr ? "نشحن من فلسطين إلى العالم كله. الشحن عادة يستغرق 7-14 يوم." : "We ship from Palestine worldwide! Shipping usually takes 7-14 days.";
       }
 
       return isAr 
-        ? "أنا هنا للمساعدة! يمكنك سؤالي عن المنتجات، الأسعار، أو قصص الحرفيين الفلسطينيين."
-        : "I'm here to help! You can ask me about products, prices, or the stories of our Palestinian artisans.";
+        ? "أنا هنا للمساعدة! اسأل عن المنتجات أو الأسعار أو قصص الحرفيين."
+        : "I'm here to help! Ask me about products, prices, or our artisans' stories.";
     };
 
     if (!GROQ_API_KEY) {
-      console.warn('Chatbot: VITE_GROQ_API_KEY is missing. Using local fallback.');
+      console.warn('Chatbot: VITE_GROQ_API_KEY is missing. Using fallback.');
       return getFallbackResponse(userQuery);
     }
-
-    const role = user?.user_type || 'guest';
-    const isArQuery = /[\u0600-\u06FF]/.test(userQuery);
-    const targetLanguage = isArQuery ? 'Arabic' : 'English';
-
-    // Build a self-contained context block embedded directly in the user message
-    const contextBlock = `
-CONTEXT — Juthoor Palestinian Artisan Marketplace:
-
-PRODUCTS & PRICES:
-- Tatreez Dresses: Pink Heritage Dress $180, Traditional Red Dress $220 (by Maryam Al-Ali, Gaza)
-- Clothing: Map Hoodie $110, Key Hoodie $125 (by Layla Kanaan, Ramallah)
-- Bags: Zaitouna Tatreez Bag $85, Pomegranate Bag $115, Ard Al-Khayr Bag $120
-- Ceramics & Glass: Hebron Glass Cup $10, Keffiyeh Mug $15, Medium Plate $22, Ceramic Map Plate $26, Large Plate $30
-- Accessories: Wedding Souvenirs $12, Keychains Set $28, Tatreez Earrings $35, Map Necklace $45, Nabulsia Set $55, Walnut Mirror $78, Wall Hanging $85
-- Jewelry: Tatreez Earrings $35, Map Necklace $45, Necklace Pal $50, Nabulsia Set $55
-- Home Decor: Heritage Wall Hooks $25-$40, Heritage Wall Hanging $85
-
-ARTISANS BY CITY:
-- Nablus: Sami Al-Kurd (wood/metal), Omar Haddad (ceramics), Fatima & Omar (micro-tatreez jewelry)
-- Hebron: Ibrahim Al-Natsheh (glasswork, rating 4.9), Khalil Jweiles (woodwork, rating 4.8)
-- Ramallah: Layla Al-Kilani (tatreez/embroidery), Samia Al-Kilani (tatreez bags), Layla Kanaan (modern heritage clothing)
-- Jerusalem: Zein Al-Tabari (jewelry design)
-- Gaza: Maryam Al-Ali (traditional dresses), Mariam Abu Dagga (cross-stitch, rating 5.0 - highest rated)
-- Bethlehem: Amal Mansour (tatreez bags), Sara Masri (contemporary/mugs), Amina Mansour (heritage weaving, 304 reviews)
-
-PRICE RANGES: Budget <$30 | Mid $30-$80 | Premium $80-$130 | Luxury $130-$220
-TOP SELLERS: Wristlet Keychains $28 (304 reviews), Pomegranate Bag $115 (189 reviews), Keffiyeh Mug $15 (156 reviews)
-${role === 'admin' ? '\nADMIN DATA: 15 artisans, 15 products, 6 cities, +9% MoM revenue, best category: Accessories' : ''}
-${role === 'artisan' ? `\nARTISAN RULES: Only discuss this artisan's own products. Do not reveal buyer info or other artisans' sales.` : ''}
-${role === 'buyer' ? '\nBUYER RULES: Do not share artisan financial/sales data. Help buyer discover and compare products.' : ''}
-
-INSTRUCTIONS: You are the Juthoor AI Assistant. Answer ONLY using the data above. Always cite specific product names and prices. Never give generic responses. Respond ONLY in ${targetLanguage}. Do not translate the user's question, just answer in ${targetLanguage}.
- 
- USER QUESTION: ${userQuery}
-
-Answer based only on the context above:`;
 
     try {
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -271,18 +177,21 @@ Answer based only on the context above:`;
           messages: [
             { 
               role: 'system', 
-              content: "You are Juthoor's AI assistant for a Palestinian artisan marketplace. You help buyers and artisans with products, orders, shipping, payments, and anything related to the platform.\n\nCRITICAL RULE: Always reply in the same language the user writes in.\n- If the user writes in Arabic → respond in Arabic only\n- If the user writes in English → respond in English only\n- Never mix languages in one response\n\nPlatform details:\n- Juthoor sells authentic Palestinian handmade products: tatreez embroidery, olive oil, ceramics, bags, wall art, and more\n- Products are from Palestinian cities: Nablus, Hebron, Ramallah, Jerusalem, and others\n- Users can be Buyers or Artisans\n- Payment methods: credit/debit card, PayPal, Reflect\n- Features: wishlist, order history, Heritage Authenticity Badge\n- Tagline: Rooted in Palestine, Reaching the World\n\nBe warm, helpful, and concise."
+              content: getSystemPrompt()
             },
-            { role: 'user', content: contextBlock }
+            { 
+              role: 'user', 
+              content: userQuery
+            }
           ],
-          max_tokens: 1024,
+          max_tokens: 512,
           temperature: 0.7,
         })
       });
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        console.error('Chatbot: API error:', response.status, err);
+        console.error('Chatbot API error:', response.status, err);
         throw new Error('API Error');
       }
 
@@ -292,7 +201,7 @@ Answer based only on the context above:`;
       }
       throw new Error('Invalid Response');
     } catch (error) {
-      console.error('Chatbot: API failed, using fallback:', error);
+      console.error('Chatbot API failed, using fallback:', error);
       return getFallbackResponse(userQuery);
     }
   };
