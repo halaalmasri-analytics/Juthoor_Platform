@@ -1,6 +1,5 @@
 import { ArrowLeft, MapPin, Star, Award, ShoppingCart, Heart, Check, View, ShieldCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { ARPreview } from '../components/ARPreview';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -27,7 +26,6 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
   };
   
   const [activeVariantId, setActiveVariantId] = useState<string | null>(null);
-  const [showAR, setShowAR] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -96,14 +94,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
           {t('back_homepage')}
         </button>
 
-        {/* AR Preview Modal */}
-        {showAR && (
-          <ARPreview
-            imageUrl={displayImage}
-            productName={getName() || product.name_en}
-            onClose={() => setShowAR(false)}
-          />
-        )}
+
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 bg-white rounded-2xl shadow-xl overflow-hidden p-4 md:p-8">
           {/* Image Section */}
@@ -117,14 +108,6 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
                 (e.target as HTMLImageElement).src = placeholderUrl;
               }}
             />
-            {/* AR Button — positioned on the image */}
-            <button
-              onClick={() => setShowAR(true)}
-              className="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-auto bg-green-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl font-bold flex items-center justify-center gap-2.5 hover:bg-green-800 transition-all shadow-xl border border-green-700/30 group-hover:opacity-100 md:opacity-0 md:translate-y-2 md:group-hover:translate-y-0"
-            >
-              <View className="w-5 h-5" />
-              {t('see_in_space')}
-            </button>
           </div>
 
           {/* Details Section */}
