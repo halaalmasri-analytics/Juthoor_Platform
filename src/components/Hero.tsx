@@ -82,6 +82,7 @@ export function Hero({ onNavigate }: HeroProps) {
         muted         // Required for autoplay on iOS & Android Chrome
         playsInline   // Required for inline play on iOS (prevents fullscreen takeover)
         preload="auto"
+        poster="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80"
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
         {/*
