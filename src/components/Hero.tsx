@@ -21,9 +21,7 @@ export function Hero({ onNavigate }: HeroProps) {
     // ── 1. Pick the right source based on device width ──────────────────
     //    Mobile  → 480p / 0.76 MB — starts instantly on any mobile network
     //    Desktop → 720p / 7.86 MB — good quality, still 82% smaller than original
-    const src = isMobile()
-      ? '/Palestine_Juthoor_mobile.mp4'
-      : '/Palestine_Juthoor_desktop.mp4';
+    const src = '/hero-mobile.mp4';
 
     // Only swap the src if it's different (avoids unnecessary reload on re-render)
     if (!video.currentSrc.endsWith(src)) {
@@ -91,7 +89,7 @@ export function Hero({ onNavigate }: HeroProps) {
           Sources are set dynamically in useEffect based on device width.
           The <source> below is the SSR / no-JS fallback only.
         */}
-        <source src="/Palestine_Juthoor_desktop.mp4" type="video/mp4" />
+        <source src="/hero-mobile.mp4" type="video/mp4" />
       </video>
 
       {/* ── Hero Content ──────────────────────────────────────────────── */}
