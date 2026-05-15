@@ -144,22 +144,26 @@ import { Chatbot } from './components/Chatbot';
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'artisans' | 'products' | 'checkout' | 'login' | 'signup' | 'profile' | 'insights' | 'artisan-dashboard' | 'buyer-dashboard' | 'admin-dashboard'>('home');
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [redirectAfterLogin, setRedirectAfterLogin] = useState<string | null>(null);
 
   const handleNavigate = (view: string) => {
+    if (view === 'login' || view === 'signup') {
+      localStorage.setItem('redirectPath', currentView);
+    }
     setCurrentView(view as any);
     setSelectedProductId(null);
   };
 
   const handleAuthRequiredAction = (targetView: string) => {
-    setRedirectAfterLogin(targetView);
+    localStorage.setItem('redirectPath', targetView);
     setCurrentView('login');
   };
 
   const handleLoginSuccess = () => {
-    if (redirectAfterLogin) {
-      setCurrentView(redirectAfterLogin as any);
-      setRedirectAfterLogin(null);
+    const redirectPath = localStorage.getItem('redirectPath');
+    
+    if (redirectPath && redirectPath !== 'login' && redirectPath !== 'signup') {
+      localStorage.removeItem('redirectPath');
+      setCurrentView(redirectPath as any);
     } else {
       const stored = localStorage.getItem('juthoor_user');
       const currentUser = stored ? JSON.parse(stored) : null;
