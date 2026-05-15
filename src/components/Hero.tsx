@@ -71,7 +71,7 @@ export function Hero({ onNavigate }: HeroProps) {
 
   return (
     <section
-      className="relative overflow-hidden py-12 md:py-20 min-h-[60vh] md:min-h-[80vh] flex items-center bg-black"
+      className="relative overflow-hidden py-12 md:py-20 min-h-[60vh] md:min-h-[80vh] flex items-center bg-black mt-20"
       dir={dir}
     >
       {/* ── Hero Video Background ──────────────────────────────────────── */}
