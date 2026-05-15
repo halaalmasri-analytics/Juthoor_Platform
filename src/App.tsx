@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { useLanguage } from './contexts/LanguageContext';
 import { useAuth } from './contexts/AuthContext';
 import { useProducts } from './contexts/ProductContext';
@@ -184,6 +185,7 @@ function App() {
         onLoginSuccess={handleLoginSuccess}
       />
       <Chatbot />
+      <Analytics />
     </>
   );
 }
