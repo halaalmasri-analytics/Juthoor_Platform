@@ -141,14 +141,20 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
 }
 
 import { Chatbot } from './components/Chatbot';
+import { AuthModal } from './components/AuthModal';
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'artisans' | 'products' | 'checkout' | 'login' | 'signup' | 'profile' | 'insights' | 'artisan-dashboard' | 'buyer-dashboard' | 'admin-dashboard'>('home');
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'signup'>('login');
 
   const handleNavigate = (view: string) => {
     if (view === 'login' || view === 'signup') {
       localStorage.setItem('redirectPath', currentView);
+      setAuthModalTab(view as 'login' | 'signup');
+      setIsAuthModalOpen(true);
+      return;
     }
     setCurrentView(view as any);
     setSelectedProductId(null);
@@ -156,7 +162,8 @@ function App() {
 
   const handleAuthRequiredAction = (targetView: string) => {
     localStorage.setItem('redirectPath', targetView);
-    setCurrentView('login');
+    setAuthModalTab('login');
+    setIsAuthModalOpen(true);
   };
 
   const handleLoginSuccess = () => {
@@ -183,6 +190,12 @@ function App() {
         onSelectProduct={setSelectedProductId}
         onAuthRequired={handleAuthRequiredAction}
         onLoginSuccess={handleLoginSuccess}
+      />
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)}
+        initialTab={authModalTab}
+        onSuccess={handleLoginSuccess}
       />
       <Chatbot />
       <Analytics />
@@ -215,7 +228,8 @@ function ViewContent({
 
   // Auth Guard for Checkout
   if (currentView === 'checkout' && !isAuthenticated) {
-     return <Login onBack={() => onNavigate('products')} onNavigateToSignup={() => onNavigate('signup')} onSuccess={onLoginSuccess} />;
+     onNavigate('login');
+     return null;
   }
 
   if (selectedProduct) {
@@ -234,9 +248,9 @@ function ViewContent({
 
   switch (currentView) {
     case 'login':
-      return <Login onBack={() => onNavigate('home')} onNavigateToSignup={() => onNavigate('signup')} onSuccess={onLoginSuccess} />;
     case 'signup':
-      return <Signup onBack={() => onNavigate('home')} onNavigateToLogin={() => onNavigate('login')} onSuccess={onLoginSuccess} />;
+      onNavigate('home'); // Redirect to home if someone manually goes to /login or /signup
+      return null;
     
     case 'artisan-dashboard':
       if (!isAuthenticated || !user || user.user_type !== 'artisan') {
