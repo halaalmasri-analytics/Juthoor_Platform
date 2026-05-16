@@ -27,8 +27,20 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
   
   const [activeVariantId, setActiveVariantId] = useState<string | null>(null);
 
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    setScrollY(0); // Reset scroll tracking on product change
     if (product.variants && product.variants.length > 0) {
       setActiveVariantId(product.variants[0].id);
     } else {
@@ -98,11 +110,14 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-12 bg-white rounded-2xl shadow-xl overflow-hidden p-4 md:p-8">
           {/* Image Section */}
-          <div className="relative h-64 sm:h-96 md:h-[600px] w-full bg-gray-100 rounded-xl overflow-hidden shadow-inner group">
+          <div className="relative h-64 sm:h-96 md:h-[600px] w-full bg-gray-100 rounded-xl overflow-hidden shadow-inner group z-0">
             <img 
               src={displayImage}
               alt={getName()}
-              className="w-full h-full object-cover transition duration-300"
+              className="w-full h-full object-cover will-change-transform"
+              style={{ 
+                transform: `translateY(${scrollY * 0.15}px) scale(1.1)`,
+              }}
               loading="lazy"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = placeholderUrl;
