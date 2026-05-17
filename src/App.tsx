@@ -63,7 +63,7 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
               <Loader2 className="w-12 h-12 animate-spin text-green-900" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
               {displayProducts.slice(0, 3).map((product) => (
                 <JuthoorProductCard 
                   key={product.id} 
@@ -142,6 +142,7 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
 
 import { Chatbot } from './components/Chatbot';
 import { AuthModal } from './components/AuthModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'artisans' | 'products' | 'checkout' | 'login' | 'signup' | 'profile' | 'insights' | 'artisan-dashboard' | 'buyer-dashboard' | 'admin-dashboard'>('home');
@@ -182,7 +183,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className="pb-16 md:pb-0">
       <ViewContent 
         currentView={currentView} 
         selectedProductId={selectedProductId}
@@ -198,8 +199,9 @@ function App() {
         onSuccess={handleLoginSuccess}
       />
       <Chatbot />
+      <MobileBottomNav currentView={currentView} onNavigate={handleNavigate} />
       <Analytics />
-    </>
+    </div>
   );
 }
 

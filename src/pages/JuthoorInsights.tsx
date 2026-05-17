@@ -140,7 +140,7 @@ export function JuthoorInsights() {
         </div>
 
         {/* KPI Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-10">
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-green-100/50">
             <div className="flex items-center justify-between mb-4">
               <div className="bg-green-100 p-3 rounded-2xl text-green-900">

@@ -120,23 +120,28 @@ export function Footer() {
               {t('juthoor')} - {t('rooted_reaching')}
             </p>
 
-            {/* QR Code Section — hidden on very small phones */}
-            <div className="hidden sm:flex items-center gap-4">
-              <div className="text-right">
-                <div className="flex items-center gap-1.5 text-green-200 mb-1 justify-end">
+            {/* QR Code Section */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-0">
+              <div className="text-center sm:text-right">
+                <div className="flex items-center justify-center sm:justify-end gap-1.5 text-green-200 mb-1">
                   <ScanLine className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase tracking-wider">{t('scan_explore')}</span>
                 </div>
                 <p className="text-green-300/80 text-xs">{t('discover_artisans')}</p>
               </div>
-              <div className={`rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-500 hover:scale-105 ${animateQR ? 'opacity-100 translate-y-0 animate-fadeIn' : 'opacity-0 translate-y-4'}`}>
+              <a 
+                href="https://juthoor.ps" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`block rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-500 hover:scale-105 ${animateQR ? 'opacity-100 translate-y-0 animate-fadeIn' : 'opacity-0 translate-y-4'}`}
+              >
                 <img 
                   src="/QR.png" 
-                  alt="Scan to explore" 
-                  className="w-[150px] h-[150px] object-contain bg-white" 
+                  alt="Scan to explore Juthoor.ps" 
+                  className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] object-contain bg-white" 
                   loading="lazy"
                 />
-              </div>
+              </a>
             </div>
           </div>
         </div>
