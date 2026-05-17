@@ -3,12 +3,16 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, Legend, AreaChart, Area
 } from 'recharts';
-import { 
-  TrendingUp, Users, ShoppingBag, DollarSign, Brain, 
-  ArrowUpRight, ArrowDownRight, Search, Sparkles, Filter, CheckCircle, XCircle 
-} from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ARTISANS } from '../lib/staticData';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { 
+  TrendingUp, Users, ShoppingBag, DollarSign, Brain, 
+  ArrowUpRight, ArrowDownRight, Search, Sparkles, Filter, CheckCircle, XCircle,
+  FileText, Table as TableIcon, ArrowRight, X
+} from 'lucide-react';
 
 // Mock Data
 const revenueData = [
@@ -44,6 +48,15 @@ export function JuthoorInsights() {
   const [aiQuestion, setAiQuestion] = useState('');
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
   const [isAsking, setIsAsking] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  
+  // KPI Data
+  const kpiData = {
+    totalSales: '$42,850',
+    activeArtisans: '142',
+    monthlyBuyers: '1,894',
+    avgOrderValue: '$84.20'
+  };
   
   // Verification State
   const [verifiedIds, setVerifiedIds] = useState<string[]>([]);
@@ -116,7 +129,10 @@ export function JuthoorInsights() {
               <Filter className="w-4 h-4" />
               {t('filter_data')}
             </button>
-            <button className="flex items-center gap-2 bg-green-900 px-6 py-2.5 rounded-xl text-white font-bold hover:bg-green-800 transition shadow-lg">
+            <button 
+              onClick={() => setIsReportModalOpen(true)}
+              className="flex items-center gap-2 bg-green-900 px-6 py-2.5 rounded-xl text-white font-bold hover:bg-green-800 transition shadow-lg"
+            >
               <TrendingUp className="w-4 h-4" />
               {t('generate_report')}
             </button>
@@ -136,7 +152,7 @@ export function JuthoorInsights() {
               </span>
             </div>
             <p className="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">{t('total_sales')}</p>
-            <h3 className="text-3xl font-black text-green-900">$42,850</h3>
+            <h3 className="text-3xl font-black text-green-900">{kpiData.totalSales}</h3>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-green-100/50">
@@ -150,7 +166,7 @@ export function JuthoorInsights() {
               </span>
             </div>
             <p className="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">{t('active_artisans')}</p>
-            <h3 className="text-3xl font-black text-green-900">142</h3>
+            <h3 className="text-3xl font-black text-green-900">{kpiData.activeArtisans}</h3>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-green-100/50">
@@ -164,7 +180,7 @@ export function JuthoorInsights() {
               </span>
             </div>
             <p className="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">{t('monthly_buyers')}</p>
-            <h3 className="text-3xl font-black text-green-900">1,894</h3>
+            <h3 className="text-3xl font-black text-green-900">{kpiData.monthlyBuyers}</h3>
           </div>
 
           <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-green-100/50">
@@ -178,7 +194,7 @@ export function JuthoorInsights() {
               </span>
             </div>
             <p className="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">{t('avg_order_value')}</p>
-            <h3 className="text-3xl font-black text-green-900">$84.20</h3>
+            <h3 className="text-3xl font-black text-green-900">{kpiData.avgOrderValue}</h3>
           </div>
         </div>
 
@@ -389,6 +405,17 @@ export function JuthoorInsights() {
            </div>
         </div>
       </div>
+
+      <ReportModal 
+        isOpen={isReportModalOpen} 
+        onClose={() => setIsReportModalOpen(false)} 
+        data={{
+          kpis: kpiData,
+          artisans: artisanPerformance,
+          categories: categoryData,
+          revenue: revenueData
+        }}
+      />
     </div>
   );
 }
@@ -397,4 +424,157 @@ function Loader2Icon({className}: any) {
   return (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
   )
+}
+
+function ReportModal({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) {
+  if (!isOpen) return null;
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    const date = new Date().toLocaleDateString();
+
+    // Header
+    doc.setFillColor(6, 78, 59); // Juthoor Green
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text('Juthoor Insights Report', 20, 25);
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${date}`, 160, 25);
+
+    // KPI Summary
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+    doc.text('KPI Summary', 20, 55);
+    
+    const kpiRows = [
+      ['Total Sales', data.kpis.totalSales],
+      ['Active Artisans', data.kpis.activeArtisans],
+      ['Monthly Buyers', data.kpis.monthlyBuyers],
+      ['Avg. Order Value', data.kpis.avgOrderValue],
+    ];
+
+    autoTable(doc, {
+      startY: 60,
+      head: [['Metric', 'Value']],
+      body: kpiRows,
+      theme: 'striped',
+      headStyles: { fillColor: [6, 78, 59] },
+    });
+
+    // Top Artisans
+    doc.text('Top Performing Artisans', 20, (doc as any).lastAutoTable.finalY + 20);
+    
+    const artisanRows = data.artisans.map((a: any) => [a.name, `$${a.sales}`, `${a.rating} / 5.0`]);
+
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 25,
+      head: [['Artisan', 'Total Sales', 'Rating']],
+      body: artisanRows,
+      theme: 'striped',
+      headStyles: { fillColor: [6, 78, 59] },
+    });
+
+    // Categories
+    doc.text('Sales by Category', 20, (doc as any).lastAutoTable.finalY + 20);
+    
+    const categoryRows = data.categories.map((c: any) => [c.name, `${c.value}%`]);
+
+    autoTable(doc, {
+      startY: (doc as any).lastAutoTable.finalY + 25,
+      head: [['Category', 'Market Share']],
+      body: categoryRows,
+      theme: 'striped',
+      headStyles: { fillColor: [6, 78, 59] },
+    });
+
+    doc.save(`Juthoor_Insights_Report_${date.replace(/\//g, '-')}.pdf`);
+  };
+
+  const generateExcel = () => {
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1: KPIs
+    const kpiWS = XLSX.utils.json_to_sheet([
+      { Metric: 'Total Sales', Value: data.kpis.totalSales },
+      { Metric: 'Active Artisans', Value: data.kpis.activeArtisans },
+      { Metric: 'Monthly Buyers', Value: data.kpis.monthlyBuyers },
+      { Metric: 'Avg. Order Value', Value: data.kpis.avgOrderValue },
+      { Metric: 'Generated Date', Value: new Date().toLocaleString() }
+    ]);
+    XLSX.utils.book_append_sheet(wb, kpiWS, "KPI Overview");
+
+    // Sheet 2: Artisans
+    const artisanWS = XLSX.utils.json_to_sheet(data.artisans.map((a: any) => ({
+      'Artisan Name': a.name,
+      'Total Sales ($)': a.sales,
+      'Rating': a.rating
+    })));
+    XLSX.utils.book_append_sheet(wb, artisanWS, "Top Artisans");
+
+    // Sheet 3: Categories
+    const categoryWS = XLSX.utils.json_to_sheet(data.categories.map((c: any) => ({
+      'Category': c.name,
+      'Percentage (%)': c.value
+    })));
+    XLSX.utils.book_append_sheet(wb, categoryWS, "Sales by Category");
+
+    XLSX.writeFile(wb, `Juthoor_Data_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-white w-full max-w-sm rounded-[2rem] shadow-2xl p-8 relative animate-fadeIn">
+        <button 
+          onClick={onClose} 
+          className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition p-2 hover:bg-gray-100 rounded-full"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        
+        <div className="text-center mb-8">
+           <div className="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+             <TrendingUp className="w-8 h-8 text-green-900" />
+           </div>
+           <h2 className="text-2xl font-bold text-green-900">Generate Report</h2>
+           <p className="text-gray-500 mt-2">Select your preferred format</p>
+        </div>
+        
+        <div className="space-y-4">
+           <button 
+             onClick={() => { generatePDF(); onClose(); }}
+             className="w-full flex items-center justify-between p-5 border-2 border-gray-100 rounded-2xl hover:border-green-800 hover:bg-green-50 transition group"
+           >
+             <div className="flex items-center gap-4">
+               <div className="bg-red-100 p-3 rounded-xl text-red-600 group-hover:bg-red-200 transition">
+                 <FileText className="w-6 h-6" />
+               </div>
+               <div className="text-left">
+                 <p className="font-bold text-gray-900">Download as PDF</p>
+                 <p className="text-xs text-gray-500">Visual report with tables</p>
+               </div>
+             </div>
+             <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-green-800 transition" />
+           </button>
+           
+           <button 
+             onClick={() => { generateExcel(); onClose(); }}
+             className="w-full flex items-center justify-between p-5 border-2 border-gray-100 rounded-2xl hover:border-green-800 hover:bg-green-50 transition group"
+           >
+             <div className="flex items-center gap-4">
+               <div className="bg-green-100 p-3 rounded-xl text-green-600 group-hover:bg-green-200 transition">
+                 <TableIcon className="w-6 h-6" />
+               </div>
+               <div className="text-left">
+                 <p className="font-bold text-gray-900">Download as Excel</p>
+                 <p className="text-xs text-gray-500">Raw data spreadsheet</p>
+               </div>
+             </div>
+             <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-green-800 transition" />
+           </button>
+        </div>
+      </div>
+    </div>
+  );
 }
