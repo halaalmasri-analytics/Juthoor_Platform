@@ -194,7 +194,11 @@ function App() {
       />
       <AuthModal 
         isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          handleNavigate('home');
+          window.history.pushState({}, '', '/');
+        }}
         initialTab={authModalTab}
         onSuccess={handleLoginSuccess}
       />

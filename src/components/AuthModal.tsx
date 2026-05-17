@@ -99,6 +99,7 @@ export function AuthModal({
       >
         {/* Close Button */}
         <button 
+          type="button"
           onClick={onClose}
           className={`absolute top-6 ${dir === 'rtl' ? 'left-6' : 'right-6'} text-gray-400 hover:text-gray-600 transition p-2 hover:bg-gray-100 rounded-full z-10`}
         >
