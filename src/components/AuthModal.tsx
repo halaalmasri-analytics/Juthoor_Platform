@@ -172,12 +172,21 @@ export function AuthModal({
                 </div>
               </div>
 
-              <button 
-                disabled={loading}
-                className="w-full bg-green-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 transition flex items-center justify-center gap-2 shadow-lg disabled:opacity-75 mt-4"
-              >
-                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{t('sign_in')} <ArrowRight className={`w-5 h-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} /></>}
-              </button>
+              <div className="flex flex-col gap-4 mt-4">
+                <button 
+                  disabled={loading}
+                  className="w-full bg-green-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 transition flex items-center justify-center gap-2 shadow-lg disabled:opacity-75"
+                >
+                  {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{t('sign_in')} <ArrowRight className={`w-5 h-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} /></>}
+                </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="text-gray-500 hover:text-green-800 transition font-medium text-sm text-center"
+                >
+                  {dir === 'rtl' ? 'العودة للتصفح →' : '← Back to browsing'}
+                </button>
+              </div>
             </form>
           ) : (
             <form onSubmit={handleSignup} className="space-y-4">
@@ -242,12 +251,21 @@ export function AuthModal({
                 </div>
               </div>
 
-              <button 
-                disabled={loading}
-                className="w-full bg-green-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 transition flex items-center justify-center gap-2 shadow-lg disabled:opacity-75 mt-2"
-              >
-                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{t('create_account_btn')} <ArrowRight className={`w-5 h-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} /></>}
-              </button>
+              <div className="flex flex-col gap-4 mt-6">
+                <button 
+                  disabled={loading}
+                  className="w-full bg-green-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 transition flex items-center justify-center gap-2 shadow-lg disabled:opacity-75"
+                >
+                  {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{t('create_account_btn')} <ArrowRight className={`w-5 h-5 ${dir === 'rtl' ? 'rotate-180' : ''}`} /></>}
+                </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="text-gray-500 hover:text-green-800 transition font-medium text-sm text-center"
+                >
+                  {dir === 'rtl' ? 'العودة للتصفح →' : '← Back to browsing'}
+                </button>
+              </div>
             </form>
           )}
         </div>
