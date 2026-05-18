@@ -66,7 +66,7 @@ export function JuthoorProductCard({ product, onClick, onAuthRequired }: Product
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col cursor-pointer" 
+      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1 h-full flex flex-col cursor-pointer will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]" 
       dir={dir}
       onClick={onClick}
     >
@@ -74,7 +74,7 @@ export function JuthoorProductCard({ product, onClick, onAuthRequired }: Product
         <img
           src={product.image_url || 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80'}
           alt={getName()}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110 will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]"
           loading="lazy"
         />
         {(() => {
@@ -137,13 +137,13 @@ export function JuthoorProductCard({ product, onClick, onAuthRequired }: Product
               e.stopPropagation();
               addToCart(product);
             }}
-            className="w-full bg-green-900 hover:bg-green-800 text-white py-3 rounded-lg font-semibold transition transform hover:scale-105"
+            className="w-full bg-green-900 hover:bg-green-800 text-white py-3 rounded-lg font-semibold transition-transform duration-300 transform hover:scale-105 will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]"
           >
             {t('add_to_cart')}
           </button>
           <button 
             onClick={handleWishlistClick}
-            className={`w-full border-2 py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${isInWishlist(product.id) ? 'border-red-200 bg-red-50 text-red-600' : 'border-gray-300 hover:border-green-900 text-green-900'}`}
+            className={`w-full border-2 py-2 rounded-lg font-semibold transition-colors duration-300 flex items-center justify-center gap-2 ${isInWishlist(product.id) ? 'border-red-200 bg-red-50 text-red-600' : 'border-gray-300 hover:border-green-900 text-green-900'}`}
           >
             <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-red-600' : ''}`} />
             {t('wishlist')}

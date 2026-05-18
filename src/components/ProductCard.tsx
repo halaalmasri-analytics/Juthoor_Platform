@@ -44,12 +44,12 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]">
       <div className="relative h-64 overflow-hidden">
         <img
           src={product.image_url || 'https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg'}
           alt={getName()}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110 will-change-transform [backface-visibility:hidden] [transform:translateZ(0)]"
           loading="lazy"
         />
         <div className="absolute top-4 right-4 bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
