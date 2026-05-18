@@ -136,7 +136,7 @@ export function Footer() {
                 className={`block rounded-xl overflow-hidden shadow-lg border border-white/20 transition-all duration-500 hover:scale-105 ${animateQR ? 'opacity-100 translate-y-0 animate-fadeIn' : 'opacity-0 translate-y-4'}`}
               >
                 <img 
-                  src="/QR.png" 
+                  src="/Juthoor.png" 
                   alt="Scan to explore Juthoor.ps" 
                   className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] object-contain bg-white" 
                   loading="lazy"
