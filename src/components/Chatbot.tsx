@@ -238,10 +238,10 @@ RULES:
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-green-900 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 group"
+        className={`fixed bottom-[calc(1.5rem+4rem+env(safe-area-inset-bottom))] md:bottom-6 ${dir === 'rtl' ? 'left-6' : 'right-6'} z-[9999] bg-green-900 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 group`}
       >
         <MessageSquare className="w-6 h-6" />
-        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-white text-green-900 px-3 py-1 rounded-lg text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-green-100">
+        <span className={`absolute ${dir === 'rtl' ? 'left-full ml-3' : 'right-full mr-3'} top-1/2 -translate-y-1/2 bg-white text-green-900 px-3 py-1 rounded-lg text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-green-100`}>
           {language === 'ar' ? 'اسأل جذور' : 'Ask Juthoor'}
         </span>
       </button>
@@ -250,7 +250,11 @@ RULES:
 
   return (
     <div 
-      className={`fixed ${isMinimized ? 'bottom-6' : 'bottom-6 md:bottom-10'} ${dir === 'rtl' ? 'left-6 md:left-10' : 'right-6 md:right-10'} z-50 flex flex-col transition-all duration-300 ease-in-out`}
+      className={`fixed ${
+        isMinimized 
+          ? 'bottom-[calc(1.5rem+4rem+env(safe-area-inset-bottom))] md:bottom-6' 
+          : 'bottom-[calc(1.5rem+4rem+env(safe-area-inset-bottom))] md:bottom-10'
+      } ${dir === 'rtl' ? 'left-6 md:left-10' : 'right-6 md:right-10'} z-[9999] flex flex-col transition-all duration-300 ease-in-out`}
       style={{ width: isMinimized ? 'auto' : 'min(90vw, 450px)' }}
     >
       <div className="bg-green-900 text-white p-4 rounded-t-[2rem] flex items-center justify-between shadow-lg">
@@ -278,7 +282,7 @@ RULES:
 
       {!isMinimized && (
         <>
-          <div ref={scrollRef} className="bg-stone-50 h-[450px] overflow-y-auto p-4 space-y-4 border-x border-green-100 shadow-inner no-scrollbar">
+          <div ref={scrollRef} className="bg-stone-50 h-[300px] sm:h-[380px] md:h-[450px] overflow-y-auto p-4 space-y-4 border-x border-green-100 shadow-inner no-scrollbar">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
                 <div className={`max-w-[85%] flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
