@@ -224,18 +224,50 @@ function ViewContent({
     ? products.find(p => p.id === selectedProductId) 
     : null;
 
+  useEffect(() => {
+    if (currentView === 'checkout' && !isAuthenticated) {
+      onNavigate('login');
+      return;
+    }
+
+    if ((currentView === 'login' || currentView === 'signup')) {
+      onNavigate('home');
+      return;
+    }
+
+    if (
+      (currentView === 'artisan-dashboard' || currentView === 'profile' || currentView === 'insights' || currentView === 'admin-dashboard' || currentView === 'buyer-dashboard') &&
+      (!isAuthenticated || !user)
+    ) {
+      onNavigate('login');
+      return;
+    }
+
+    if (currentView === 'artisan-dashboard' && user && user.user_type !== 'artisan') {
+      onNavigate('login');
+      return;
+    }
+
+    if (
+      (currentView === 'buyer-dashboard' || currentView === 'profile') &&
+      user && user.user_type !== 'buyer'
+    ) {
+      onNavigate('login');
+      return;
+    }
+
+    if ((currentView === 'admin-dashboard' || currentView === 'insights') && user && user.user_type !== 'admin') {
+      onNavigate('login');
+      return;
+    }
+  }, [currentView, isAuthenticated, user, onNavigate]);
+
   if (authLoading || productsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50">
         <Loader2 className="w-12 h-12 text-green-800 animate-spin" />
       </div>
     );
-  }
-
-  // Auth Guard for Checkout
-  if (currentView === 'checkout' && !isAuthenticated) {
-     onNavigate('login');
-     return null;
   }
 
   if (selectedProduct) {
@@ -255,12 +287,9 @@ function ViewContent({
   switch (currentView) {
     case 'login':
     case 'signup':
-      onNavigate('home'); // Redirect to home if someone manually goes to /login or /signup
-      return null;
-    
+      return <HomePage onProductClick={onSelectProduct} onNavigate={onNavigate} currentView={currentView} />;
     case 'artisan-dashboard':
       if (!isAuthenticated || !user || user.user_type !== 'artisan') {
-        setTimeout(() => onNavigate('login'), 0);
         return null;
       }
       return <ArtisanDashboard onNavigate={onNavigate} />;
@@ -268,7 +297,6 @@ function ViewContent({
     case 'buyer-dashboard':
     case 'profile':
       if (!isAuthenticated || !user || user.user_type !== 'buyer') {
-        setTimeout(() => onNavigate('login'), 0);
         return null;
       }
       return <BuyerDashboard onProductClick={onSelectProduct} onNavigate={onNavigate} />;
@@ -276,7 +304,6 @@ function ViewContent({
     case 'admin-dashboard':
     case 'insights':
       if (!isAuthenticated || !user || user.user_type !== 'admin') {
-        setTimeout(() => onNavigate('login'), 0);
         return null;
       }
       return (
