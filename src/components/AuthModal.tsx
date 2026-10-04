@@ -157,7 +157,7 @@ export function AuthModal({
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-sm font-bold text-gray-700">{t('password')}</label>
                   <button type="button" className="text-xs text-green-800 font-bold hover:underline">
-                    {t('forgot_password') || (dir === 'rtl' ? 'نسيت كلمة المرور؟' : 'Forgot password?')}
+                    {t('forgot_password')}
                   </button>
                 </div>
                 <div className="relative">
@@ -185,14 +185,14 @@ export function AuthModal({
                   onClick={onClose}
                   className="text-gray-500 hover:text-green-800 transition font-medium text-sm text-center"
                 >
-                  {dir === 'rtl' ? 'العودة للتصفح →' : '← Back to browsing'}
+                  {t('back_browsing')}
                 </button>
               </div>
             </form>
           ) : (
             <form onSubmit={handleSignup} className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1.5">Account Type</label>
+                <label className="block text-sm font-bold text-gray-700 mb-1.5">{t('account_type')}</label>
                 <div className="relative">
                   <Shield className={`absolute ${dir === 'rtl' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5`} />
                   <select
@@ -200,9 +200,9 @@ export function AuthModal({
                     onChange={(e) => setSignupRole(e.target.value as any)}
                     className={`w-full ${dir === 'rtl' ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600 transition appearance-none`}
                   >
-                    <option value="buyer">Buyer</option>
-                    <option value="artisan">Artisan</option>
-                    <option value="admin">Admin</option>
+                    <option value="buyer">{t('buyer')}</option>
+                    <option value="artisan">{t('artisan_role')}</option>
+                    <option value="admin">{t('admin_role')}</option>
                   </select>
                 </div>
               </div>
@@ -264,7 +264,7 @@ export function AuthModal({
                   onClick={onClose}
                   className="text-gray-500 hover:text-green-800 transition font-medium text-sm text-center"
                 >
-                  {dir === 'rtl' ? 'العودة للتصفح →' : '← Back to browsing'}
+                  {t('back_browsing')}
                 </button>
               </div>
             </form>

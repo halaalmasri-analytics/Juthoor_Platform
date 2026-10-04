@@ -92,7 +92,7 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
               >
                 <option value="All">{t('all_regions')}</option>
                 {REGIONS.filter(r => r !== 'All').map(region => (
-                  <option key={region} value={region}>{region}</option>
+                  <option key={region} value={region}>{t(`city_${region.toLowerCase()}`)}</option>
                 ))}
               </select>
             </div>
@@ -106,7 +106,7 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
               >
                 <option value="All">{t('all_categories')}</option>
                 {CATEGORIES.filter(c => c !== 'All').map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>{t(`cat_${cat.toLowerCase().replace(' ', '_')}`)}</option>
                 ))}
               </select>
             </div>
@@ -140,7 +140,7 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
                     : 'bg-white text-green-900 hover:bg-green-50 border border-green-100'
                 }`}
               >
-                {cat}
+                {cat === 'All' ? t('all_categories') : t(`cat_${cat.toLowerCase().replace(' ', '_')}`)}
               </button>
             ))}
           </div>
@@ -152,8 +152,8 @@ export function ProductsPage({ onProductClick, onAuthRequired }: { onProductClic
             <SlidersHorizontal className="w-4 h-4" />
             <span>{t('showing_results')} </span>
             {searchTerm && <span className="bg-gray-100 px-2 py-1 rounded">"{searchTerm}"</span>}
-            {selectedCategory !== 'All' && <span className="bg-gray-100 px-2 py-1 rounded">{selectedCategory}</span>}
-            {selectedRegion !== 'All' && <span className="bg-gray-100 px-2 py-1 rounded">{selectedRegion}</span>}
+            {selectedCategory !== 'All' && <span className="bg-gray-100 px-2 py-1 rounded">{t(`cat_${selectedCategory.toLowerCase().replace(' ', '_')}`)}</span>}
+            {selectedRegion !== 'All' && <span className="bg-gray-100 px-2 py-1 rounded">{t(`city_${selectedRegion.toLowerCase()}`)}</span>}
             <button 
               onClick={() => {
                 setSearchTerm('');

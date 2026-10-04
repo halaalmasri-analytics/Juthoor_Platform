@@ -34,9 +34,7 @@ export function Chatbot() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const greeting = language === 'ar' 
-        ? `مرحباً! أنا مساعد جذور الذكي. كيف يمكنني مساعدتك اليوم؟`
-        : `Hello! I'm your Juthoor AI Assistant. How can I help you today?`;
+      const greeting = t('ai_greeting');
       
       setMessages([{
         id: '1',
@@ -242,7 +240,7 @@ RULES:
       >
         <MessageSquare className="w-6 h-6" />
         <span className={`absolute ${dir === 'rtl' ? 'left-full ml-3' : 'right-full mr-3'} top-1/2 -translate-y-1/2 bg-white text-green-900 px-3 py-1 rounded-lg text-sm font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-green-100`}>
-          {language === 'ar' ? 'اسأل جذور' : 'Ask Juthoor'}
+          {t('ask_juthoor')}
         </span>
       </button>
     );
@@ -263,10 +261,10 @@ RULES:
             <Bot className="w-5 h-5 text-amber-300" />
           </div>
           <div>
-            <h3 className="font-bold text-sm">{language === 'ar' ? 'مساعد جذور الذكي' : 'Juthoor AI Assistant'}</h3>
+            <h3 className="font-bold text-sm">{t('juthoor_ai_assistant')}</h3>
             <div className="flex items-center gap-1 text-[10px]">
               <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-green-200 uppercase tracking-widest font-bold">Groq Powered</span>
+              <span className="text-green-200 uppercase tracking-widest font-bold">{t('groq_powered')}</span>
             </div>
           </div>
         </div>
@@ -318,7 +316,7 @@ RULES:
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={language === 'ar' ? 'اكتب رسالتك...' : 'Type a message...'}
+              placeholder={t('type_message')}
               className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-900 transition"
             />
             <button 

@@ -118,8 +118,8 @@ export function Header({ onNavigate, currentView = 'home' }: { onNavigate?: (vie
                         className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 transition font-medium"
                       >
                         <UserCircle className="w-5 h-5 text-green-700" />
-                        {user?.user_type === 'admin' ? 'Admin Dashboard' :
-                         user?.user_type === 'artisan' ? 'Artisan Dashboard' : 'My Dashboard'}
+                        {user?.user_type === 'admin' ? t('admin_dashboard') :
+                         user?.user_type === 'artisan' ? t('artisan_dashboard_title') : t('my_dashboard')}
                       </button>
                       <button 
                         onClick={() => { setAccountMenuOpen(false); signOut(); }}

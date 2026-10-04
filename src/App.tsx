@@ -77,7 +77,7 @@ function HomePage({ onProductClick, onNavigate, currentView }: HomePageProps) {
 
           {!loading && products.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-xl text-gray-600">No products available yet. Check back soon!</p>
+              <p className="text-xl text-gray-600">{t('no_products_yet')}</p>
             </div>
           )}
         </div>

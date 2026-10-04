@@ -269,7 +269,7 @@ export function JuthoorInsights() {
           
           {pendingArtisans.length === 0 ? (
             <div className="text-center py-8 text-gray-500 font-medium bg-gray-50 rounded-2xl">
-              No pending verification requests at this time.
+              {t('no_pending_requests')}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -277,9 +277,9 @@ export function JuthoorInsights() {
                 <thead>
                   <tr className="border-b-2 border-gray-100 text-gray-400 font-bold uppercase text-xs tracking-wider">
                     <th className="pb-4 px-4">{t('artisan_name')}</th>
-                    <th className="pb-4 px-4">Location</th>
+                    <th className="pb-4 px-4">{t('region')}</th>
                     <th className="pb-4 px-4">{t('craft_type')}</th>
-                    <th className="pb-4 px-4 text-center">Actions</th>
+                    <th className="pb-4 px-4 text-center">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
@@ -427,6 +427,7 @@ function Loader2Icon({className}: any) {
 }
 
 function ReportModal({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   const generatePDF = () => {
@@ -537,8 +538,8 @@ function ReportModal({ isOpen, onClose, data }: { isOpen: boolean; onClose: () =
            <div className="bg-green-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
              <TrendingUp className="w-8 h-8 text-green-900" />
            </div>
-           <h2 className="text-2xl font-bold text-green-900">Generate Report</h2>
-           <p className="text-gray-500 mt-2">Select your preferred format</p>
+           <h2 className="text-2xl font-bold text-green-900">{t('generate_report_title')}</h2>
+           <p className="text-gray-500 mt-2">{t('select_format')}</p>
         </div>
         
         <div className="space-y-4">
@@ -551,8 +552,8 @@ function ReportModal({ isOpen, onClose, data }: { isOpen: boolean; onClose: () =
                  <FileText className="w-6 h-6" />
                </div>
                <div className="text-left">
-                 <p className="font-bold text-gray-900">Download as PDF</p>
-                 <p className="text-xs text-gray-500">Visual report with tables</p>
+                 <p className="font-bold text-gray-900">{t('download_pdf')}</p>
+                 <p className="text-xs text-gray-500">{t('pdf_desc')}</p>
                </div>
              </div>
              <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-green-800 transition" />
@@ -567,8 +568,8 @@ function ReportModal({ isOpen, onClose, data }: { isOpen: boolean; onClose: () =
                  <TableIcon className="w-6 h-6" />
                </div>
                <div className="text-left">
-                 <p className="font-bold text-gray-900">Download as Excel</p>
-                 <p className="text-xs text-gray-500">Raw data spreadsheet</p>
+                 <p className="font-bold text-gray-900">{t('download_excel')}</p>
+                 <p className="text-xs text-gray-500">{t('excel_desc')}</p>
                </div>
              </div>
              <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-green-800 transition" />

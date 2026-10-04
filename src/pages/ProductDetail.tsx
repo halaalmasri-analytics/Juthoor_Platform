@@ -128,8 +128,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
           {/* Details Section */}
           <div className="flex flex-col">
             <div className={`flex flex-col gap-2 mb-6 border-b pb-6 text-right`}>
-              <h1 className="text-3xl md:text-4xl font-extrabold text-green-900 font-arabic">{product.name_ar}</h1>
-              <h2 className="text-2xl font-bold text-gray-500 font-sans">{product.name_en}</h2>
+              <h1 className="text-3xl md:text-4xl font-extrabold text-green-900 mb-2">{getName()}</h1>
 
               <div className="flex items-center justify-end gap-4 mt-2">
                 <div className="flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full">
@@ -146,30 +145,17 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
 
             {/* Description */}
             <div className={`mb-8 text-right`}>
-              <h3 className="text-xl font-bold text-gray-800 mb-3 font-arabic">وصف المنتج</h3>
-              <p className="text-gray-600 leading-relaxed text-lg mb-4 font-arabic">{product.description_ar}</p>
-              
-              <h3 className="text-lg font-bold text-gray-800 mb-2 font-sans border-t pt-4">Product Description</h3>
-              <p className="text-gray-600 leading-relaxed text-base font-sans">{product.description_en}</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">{t('product_description')}</h3>
+              <p className="text-gray-600 leading-relaxed text-lg mb-4">{getDescription()}</p>
             </div>
 
             {/* Dynamic Quality Features */}
             {(product.features_ar || product.features_en) && (
               <div className={`mb-8 text-right`}>
-                <h3 className="text-xl font-bold text-gray-800 mb-3 font-arabic">المميزات</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{t('quality_features')}</h3>
                 <ul className="space-y-2 mb-4">
-                  {product.features_ar?.map((feature, index) => (
-                    <li key={index} className="flex items-center justify-end gap-3 text-gray-700 text-lg font-arabic">
-                      {feature}
-                      <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    </li>
-                  ))}
-                </ul>
-                
-                <h3 className="text-lg font-bold text-gray-800 mb-2 font-sans border-t pt-4">Quality Features</h3>
-                <ul className="space-y-2">
-                  {product.features_en?.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3 text-gray-700 text-base font-sans text-left">
+                  {(language === 'ar' && product.features_ar ? product.features_ar : product.features_en)?.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-3 text-gray-700 text-lg">
                       <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
                       {feature}
                     </li>
@@ -245,7 +231,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
         {product.artisans && (
           <div className="mt-8 md:mt-12 bg-white rounded-2xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center border-b pb-4">
-              <span className="font-arabic">لقاء مع المصمم</span> | <span className="font-sans">Meet the Designer</span>
+              {t('meet_designer')}
             </h3>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
               {product.artisans.photo_url && (
@@ -278,8 +264,7 @@ export function ProductDetail({ product, onBack, onAuthRequired }: { product: Pr
                   <span className="font-medium text-lg">{product.artisans.region}</span>
                 </div>
                 
-                <p className="text-gray-600 leading-relaxed text-lg italic mb-4 font-arabic">"{product.artisans.bio_ar}"</p>
-                <p className="text-gray-600 leading-relaxed text-base italic font-sans">"{product.artisans.bio_en}"</p>
+                <p className="text-gray-600 leading-relaxed text-lg italic mb-4">"{getBio()}"</p>
               </div>
             </div>
           </div>

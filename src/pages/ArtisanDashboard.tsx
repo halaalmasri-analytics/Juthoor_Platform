@@ -240,11 +240,11 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
       <section className="py-8 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-green-900">Artisan Dashboard</h1>
-            <p className="text-gray-600 mt-2">Welcome back, {user?.full_name}! Manage your products and track your success</p>
+            <h1 className="text-3xl font-bold text-green-900">{t('artisan_dashboard_title')}</h1>
+            <p className="text-gray-600 mt-2">{t('welcome_back_name', { name: user?.full_name })} {t('manage_products_desc')}</p>
           </div>
           <button onClick={handleSignOut} className="flex items-center gap-2 text-red-600 font-bold hover:bg-red-50 px-4 py-2 rounded-lg transition">
-            <LogOut className="w-5 h-5" /> Sign Out
+            <LogOut className="w-5 h-5" /> {t('sign_out')}
           </button>
         </div>
       </section>
@@ -258,12 +258,12 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
           </div>
           <div>
             <h3 className={`text-xl font-bold ${isVerified ? 'text-green-900' : 'text-orange-900'} flex items-center gap-2`}>
-              {isVerified ? 'Heritage Certified ✓' : 'Pending Review'}
+              {isVerified ? t('heritage_certified_status') : t('pending_review_status')}
             </h3>
             <p className={isVerified ? 'text-green-800' : 'text-orange-800'}>
               {isVerified 
-                ? 'Your profile has been verified as an authentic Palestinian artisan.'
-                : 'Your profile is under review. You will be notified once verified.'}
+                ? t('verified_profile_desc')
+                : t('profile_under_review')}
             </p>
           </div>
         </div>
@@ -272,28 +272,28 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <div className="bg-white rounded-2xl shadow-sm p-6 flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-semibold">Total Products</p>
+              <p className="text-gray-500 text-sm font-semibold">{t('total_products')}</p>
               <p className="text-3xl font-bold text-green-900 mt-2">{stats.totalProducts}</p>
             </div>
             <div className="p-4 bg-green-50 rounded-full"><Package className="w-8 h-8 text-green-800" /></div>
           </div>
           <div className="bg-white rounded-2xl shadow-sm p-6 flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-semibold">Average Rating</p>
+              <p className="text-gray-500 text-sm font-semibold">{t('average_rating')}</p>
               <p className="text-3xl font-bold text-amber-600 mt-2">{stats.averageRating.toFixed(1)}</p>
             </div>
             <div className="p-4 bg-amber-50 rounded-full"><Star className="w-8 h-8 text-amber-600" /></div>
           </div>
           <div className="bg-white rounded-2xl shadow-sm p-6 flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-semibold">Total Earnings</p>
+              <p className="text-gray-500 text-sm font-semibold">{t('total_earnings')}</p>
               <p className="text-3xl font-bold text-green-600 mt-2">${stats.totalSales.toFixed(0)}</p>
             </div>
             <div className="p-4 bg-green-50 rounded-full"><DollarSign className="w-8 h-8 text-green-600" /></div>
           </div>
           <div className="bg-white rounded-2xl shadow-sm p-6 flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-semibold">Total Orders</p>
+              <p className="text-gray-500 text-sm font-semibold">{t('total_orders')}</p>
               <p className="text-3xl font-bold text-blue-900 mt-2">{stats.totalOrders}</p>
             </div>
             <div className="p-4 bg-blue-50 rounded-full"><ShoppingCart className="w-8 h-8 text-blue-800" /></div>
@@ -303,7 +303,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
           {/* Revenue Chart */}
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6 min-w-0">
-            <h2 className="text-xl font-bold text-green-900 mb-6">Monthly Revenue</h2>
+            <h2 className="text-xl font-bold text-green-900 mb-6">{t('monthly_revenue_chart')}</h2>
             <div className="h-[300px] w-full relative">
               {mounted && (
                 <ResponsiveContainer width="100%" height="100%">
@@ -321,14 +321,14 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
 
           {/* Recent Orders */}
           <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-green-900 mb-6">Recent Orders</h2>
+            <h2 className="text-xl font-bold text-green-900 mb-6">{t('recent_orders')}</h2>
             <div className="space-y-4">
               {recentOrders.map((order, i) => (
                 <div key={i} className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                   <div className="flex justify-between items-start mb-2">
                     <p className="font-bold text-green-900">{order.id}</p>
                     <span className={`text-xs px-2 py-1 rounded-full font-bold ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
-                      {order.status}
+                      {order.status === 'Delivered' ? t('delivered') : t('shipped')}
                     </span>
                   </div>
                   <p className="text-sm font-semibold text-gray-800 line-clamp-1">{order.product}</p>
@@ -346,8 +346,8 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="p-4 md:p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-green-900">Your Listed Products</h2>
-              <p className="text-sm text-gray-500 mt-1">Categories: Tatreez, Olive Oil, Ceramics, Olive Wood, Glasswork</p>
+              <h2 className="text-xl font-bold text-green-900">{t('listed_products')}</h2>
+              <p className="text-sm text-gray-500 mt-1">{t('categories_list')}</p>
             </div>
             <button 
               onClick={handleOpenAddModal}
@@ -362,11 +362,11 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
               <table className="w-full">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">Product</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">Rating</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-right text-sm font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">{t('product_col')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">{t('price')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">{t('rating')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-gray-500 uppercase tracking-wider">{t('status')}</th>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-gray-500 uppercase tracking-wider">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -420,7 +420,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
             <div className="p-12 flex justify-center text-green-900"><Upload className="animate-bounce" /></div>
           ) : (
             <div className="p-12 text-center">
-              <p className="text-gray-600 text-lg font-medium">No products yet. Create your first listing to get started!</p>
+              <p className="text-gray-600 text-lg font-medium">{t('no_products_listing')}</p>
             </div>
           )}
         </div>
@@ -450,7 +450,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                     value={formData.name_en}
                     onChange={e => handleEnNameChange(e.target.value)}
                   >
-                    <option value="">Select Name (EN)</option>
+                    <option value="">{t('select_name_en')}</option>
                     {uniqueNamesEn.map(name => (
                       <option key={name} value={name}>{name}</option>
                     ))}
@@ -464,7 +464,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                     value={formData.name_ar}
                     onChange={e => handleArNameChange(e.target.value)}
                   >
-                    <option value="">اختر الاسم (AR)</option>
+                    <option value="">{t('select_name_ar')}</option>
                     {uniqueNamesAr.map(name => (
                       <option key={name} value={name}>{name}</option>
                     ))}
@@ -481,7 +481,7 @@ export function ArtisanDashboard({ onNavigate }: { onNavigate?: (view: string) =
                     value={priceRanges.find(r => r.value === formData.price_usd)?.value || ''}
                     onChange={e => setFormData({ ...formData, price_usd: parseFloat(e.target.value) })}
                   >
-                    <option value="">Select Range</option>
+                    <option value="">{t('select_range')}</option>
                     {priceRanges.map(range => (
                       <option key={range.value} value={range.value}>{range.label}</option>
                     ))}

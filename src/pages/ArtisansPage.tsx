@@ -121,7 +121,7 @@ export function ArtisansPage({ onProductClick, onAuthRequired: _onAuthRequired }
 
                   {/* Bio */}
                   <p className="text-gray-600 leading-relaxed mb-8 italic text-[15px] flex-grow">
-                    "{language === 'ar' ? artisan.bio_ar : artisan.bio_en}"
+                    "{language === 'ar' ? artisan.bio_ar : language === 'fr' ? ((artisan as any).bio_fr || artisan.bio_en) : artisan.bio_en}"
                   </p>
 
                   {/* Render Embedded Products! */}
@@ -136,7 +136,7 @@ export function ArtisansPage({ onProductClick, onAuthRequired: _onAuthRequired }
                            if (product.variants && product.variants.length > 0) {
                               return (
                                 <li key={product.id} className={`text-[15px] ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
-                                  <span className="font-bold text-gray-800">{product.name_en} - </span>
+                                  <span className="font-bold text-gray-800">{language === 'ar' ? product.name_ar : language === 'fr' ? (product.name_fr || product.name_en) : product.name_en} - </span>
                                   <div className="inline-flex flex-wrap items-center gap-x-1.5 mt-1">
                                     {product.variants.map((v, idx) => (
                                       <span key={v.id}>
@@ -161,7 +161,7 @@ export function ArtisansPage({ onProductClick, onAuthRequired: _onAuthRequired }
                                  onClick={() => onProductClick(product.id)}
                                  className="text-green-700 hover:text-green-900 hover:underline font-bold text-[15px] transition items-center text-left"
                                >
-                                 {product.name_en} (${product.price_usd})
+                                 {language === 'ar' ? product.name_ar : language === 'fr' ? (product.name_fr || product.name_en) : product.name_en} (${product.price_usd})
                                </button>
                              </li>
                            );
